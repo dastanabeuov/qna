@@ -1,5 +1,4 @@
 class AnswersController < ApplicationController
-
   before_action :set_question, only: %i[create]
 
   def create
@@ -20,7 +19,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, :question_id)
+    params.require(:answer).permit(:body)
   end
-
 end

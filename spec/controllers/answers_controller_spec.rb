@@ -6,8 +6,8 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST(PUT) #create' do
     context 'with valid atributes' do
-      it 'save a new answer in the database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(Answer, :count).by(1)
+      it 'save a new answer in the database & the answer lies in the question' do
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
       end
 
       it 'redirectto show view' do
