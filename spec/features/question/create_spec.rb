@@ -11,37 +11,21 @@ feature 'User can create question', %q{
   describe 'Authenticated user' do
     background do
       sign_in(user)
-
       visit questions_path
       click_on 'Ask question'
     end
     
     scenario 'ask a question' do
-      #fill_in 'Email', with: user.email
-      #fill_in 'Password', with: user.password
-      #click_on 'Log in'
-
-      #visit questions_path
-      #click_on 'Ask question'
-
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'Text body'
       click_on 'Ask'
-
       expect(page).to have_content 'Your question successfully created.'
       expect(page).to have_content 'Test question'
       expect(page).to have_content 'Text body'
     end
 
     scenario 'ask question in errors' do
-      #fill_in 'Email', with: user.email
-      #fill_in 'Password', with: user.password
-      #click_on 'Log in'
-
-      #visit questions_path
-      #click_on 'Ask question'
       click_on 'Ask'
-
       expect(page).to have_content "Title can't be blank"
     end
   end
@@ -49,7 +33,6 @@ feature 'User can create question', %q{
   scenario 'Unauthenticated user tries to ask a question' do
     visit questions_path
     click_on 'Ask question'
-
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 end

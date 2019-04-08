@@ -1,24 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
   let(:user) { create(:user) }
+  let(:question) { create(:question, user_id: user.id) }
 
   describe 'GET #index' do
-    let!(:questions) { create_list(:question, 3) }
-
+    let!(:questions) { create_list(:question, 3, user_id: user.id) }
     before { get :index }
 
     it 'populates an array of all questions' do
-      #questions = create_list(:question, 3) 
-      #question1 = FactoryBot.create(:question)
-      #question2 = FactoryBot.create(:question)
-      #get :index
       expect(assigns(:questions)).to match_array(questions)
     end
 
     it 'render index view' do
-      #get :index
       expect(response).to render_template :index
     end
 
@@ -28,20 +22,16 @@ RSpec.describe QuestionsController, type: :controller do
     before { get :show, params: { id: question } }
 
     it 'assigns the requested question to @question' do
-      #get :show, params: { id: question }
       expect(assigns(:question)).to eq question
     end
 
     it 'render show view' do
-      #get :show, params: { id: question }
-
       expect(response).to render_template :show
     end
   end
 
   describe 'GET #new' do
     before { login(user) }
-
     before { get :new }
 
     it 'assigns the requested question to @question' do
@@ -55,32 +45,28 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'GET #edit' do
     before { login(user) }
-
     before { get :edit, params: { id: question } }
 
     it 'assigns the requested question to @question' do
-      #get :edit, params: { id: question }
       expect(assigns(:question)).to eq question
     end
 
     it 'render edit view' do
-      #get :edit, params: { id: question }
-
       expect(response).to render_template :edit
     end
   end
 
-  describe 'POST(PUT) #create' do
+  describe 'POST #create' do
     before { login(user) }
 
     context 'with valid atributes' do
-      it 'save a new question in the database' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+      it 'communication with logged in user is established' do
+        post :create, params: { question: attributes_for(:question) }
+        expect { assigns(:question).user_id }.to eq user.id
       end
 
       it 'redirectto show view' do
         post :create, params: { question: attributes_for(:question) }
-
         expect(response).to redirect_to assigns(:question)
       end
     end
@@ -92,7 +78,6 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirectto new view' do
         post :create, params: { question: attributes_for(:question, :invalid) }
-
         expect(response).to render_template :new
       end
     end
@@ -104,22 +89,18 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
         patch :update, params: { id: question, question: attributes_for(:question) }
-        
         expect(assigns(:question)).to eq question
       end
       
       it 'change question attributes' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
         question.reload
-
         expect(question.title).to eq 'new title'
-        
         expect(question.body).to eq 'new body'
       end
 
       it 'redirectto update question' do
         patch :update, params: { id: question, question: attributes_for(:question) }
-        
         expect(response).to redirect_to question
       end
     end
@@ -128,16 +109,12 @@ RSpec.describe QuestionsController, type: :controller do
       before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
       
       it 'does not change question' do
-        #patch :update, params: { id: question, question: attributes_for(:question, :invalid) }
         question.reload
-
-        expect(question.title).to eq 'MyString'
+        expect(question.title).to have_text 'MyString'
         expect(question.body).to eq 'MyText'
       end
 
       it 'renders edit view' do
-        #patch :update, params: { id: question, question: attributes_for(:question, :invalid) }
-      
         expect(response).to render_template :edit
       end
     end
@@ -145,16 +122,21 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'DELETE #destroy' do
     before { login(user) }
+    let!(:question) { create :question, user_id: user.id }
+    let!(:invalid_user) { create(:user) }
+    let!(:invalid_question) { create :question, user_id: invalid_user.id }
     
-    let!(:question) { create(:question) }
-    it 'delete the question' do
+    it 'delete the question if user author' do
       expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
     end
 
+    it 'delete the question if user not author' do
+      expect { delete :destroy, params: { id: invalid_question } }.to_not change(Question, :count)
+    end    
+
     it 'redirect_to index view' do
       delete :destroy, params: { id: question }
-
-       expect(response).to redirect_to questions_path
+      expect(response).to redirect_to questions_path
     end
   end
 end
