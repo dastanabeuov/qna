@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
     it "invalid author" do
       invalid_user = create(:user)
       question = create(:question, user_id: user.id )
-      expect( user.author_of?(question) ).to eq false
+      expect( invalid_user.author_of?(question) ).to eq false
     end
   end   
 

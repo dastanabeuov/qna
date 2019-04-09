@@ -60,9 +60,13 @@ RSpec.describe QuestionsController, type: :controller do
     before { login(user) }
 
     context 'with valid atributes' do
+      it 'save a new question in the database' do
+        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+      end
+
       it 'communication with logged in user is established' do
         post :create, params: { question: attributes_for(:question) }
-        expect { assigns(:question).user_id }.to eq user.id
+        expect(assigns(:question).user_id).to eq user.id
       end
 
       it 'redirectto show view' do

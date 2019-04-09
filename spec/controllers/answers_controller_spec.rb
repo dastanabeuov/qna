@@ -9,6 +9,11 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid atributes' do
+      it 'connection with the logged in user' do
+        post :create, params: { question_id: question, user_id: user.id, answer: attributes_for(:answer) }
+        expect(assigns(:answer).user_id).to eq user.id
+      end
+
       it 'save a new answer in the database & the answer lies in the question' do
         expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
       end
