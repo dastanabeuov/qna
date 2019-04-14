@@ -1,8 +1,6 @@
-= render 'shared/errors', resource: @question
-
-= form_with model: @question do |f|
-  = f.label :title
-  = f.text_field :title
-  = f.label :body
-  = f.text_area :body
-  = f.submit 'Ask'
+div class="row justify-content-center"
+  div class="col col-md-12"
+    h2 class="default-header" New question
+    = render 'form'
+    div class="mt-3"
+      = link_to 'Back', root_path, class: "btn btn-sm btn-outline-secondary"

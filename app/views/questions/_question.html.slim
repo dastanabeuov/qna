@@ -1,1 +1,2 @@
-li= question.title
+- @questions.each do |q|
+   li= link_to q.title, q

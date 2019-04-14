@@ -1,0 +1,6 @@
+.row.justify-content-center
+  .col-md-12
+    h2 class="default-header" New question
+    = render 'form'
+    .mt-3
+      = link_to 'Back', question_path(@question), class: "btn btn-sm btn-outline-secondary"

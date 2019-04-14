@@ -1,22 +1,21 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: %i[create]
-  before_action :set_answer, only: [:edit, :destroy]
-
-  def edit; end
+  before_action :set_answer, only: %i[update]
 
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user_id = current_user.id
-    if @answer.save
-      redirect_to @question, notice: 'Answer was successfully created.'
-    else
-      flash[:notice] = 'Your answer has not been published!'
-      render "questions/show"
-    end
+    @answer.save
   end
 
+  def update
+    @answer.update(answer_params)
+    @question = @answer.question
+  end  
+
   def destroy
+    @answer = Answer.find(params[:id])
     if current_user.author_of?(@answer)
       @answer.destroy
       flash[:notice] = 'Your answer has been deleted.'
