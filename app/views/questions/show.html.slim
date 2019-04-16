@@ -11,8 +11,14 @@
             method: :delete, data: { confirm: 'Are your sure delete?' },
                                   class: 'btn btn-sm btn-outline-danger'
 
+    section.best-answer
+      - if question.answers.find_by(best: true)
+        .best-answer-info
+          = render @question.answers.find_by(best: true)
+
     section.answers.mt-4
-      = render @question.answers
+      - if !answer.best
+        = render @question.answers
 
 section.new_answer.mt-5
   - if current_user

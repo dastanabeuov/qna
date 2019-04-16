@@ -3,18 +3,14 @@ ul.list-group
     = answer.body
     - if current_user&.author_of?(answer)
       = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-        = f.label :body, 'Your answer'
-        = f.text_area :body
-        = f.submit 'Save'
+        = f.label :body, 'Your answer', class: 'text-danger'
+        br/
+        = f.text_area :body, class: 'text-info'
+        = f.submit 'Save', class: 'btn btn-sm btn-outline-primary'
       .btn-group
         = link_to 'Edit answer', '#', class: 'btn btn-sm btn-outline-warning edit-answer-link', data: { answer_id: answer.id }
         = link_to 'Delete answer', answer, class: 'ml-5', 
         method: :delete, data: { confirm: 'Are your sure delete?' },
                               class: 'btn btn-sm btn-outline-danger mr-5'
         - if current_user&.author_of?(@question)
-          = link_to 'Correct?', '#', class: 'btn btn-sm btn-outline-warning correct-answer-link', data: { answer_id: answer.id }
-          = form_with model: answer, class: 'hidden', html: { id: "correct-answer-#{answer.id}" } do |f|
-            = f.label :correct, class: 'form-check-label' do
-              = f.check_box :correct, class: 'form-check-input'
-              = t('.corret_flag')
-              = f.submit 'save', class: 'ml-2'
+          = link_to 'Correct answer', correct_best_answer_path(answer), class: 'btn btn-sm btn-outline-warning correct-answer-link', id: "correct-best-answer-link-#{ answer.id }", method: :patch, remote: true

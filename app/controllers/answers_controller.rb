@@ -10,9 +10,11 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer.update(answer_params)
-    @question = @answer.question
-  end  
+    if current_user.author_of?(@answer)
+      @answer.update(answer_params)
+      @question = @answer.question
+    end
+  end
 
   def destroy
     @answer = Answer.find(params[:id])
@@ -23,6 +25,10 @@ class AnswersController < ApplicationController
       flash[:notice] = 'Your answer has not been deleted.'
     end
     redirect_to question_path(@answer.question)
+  end
+
+  def correct_best
+    answer.best_answer
   end  
 
   private

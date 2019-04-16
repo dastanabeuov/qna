@@ -129,6 +129,60 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to_not have_http_status(401)
       end
     end
-  end  
+  end
+
+  describe 'PATCH #correct_best' do
+    let(:other_answer) { create(:answer, question: question, user: user) }
+
+    context 'used bu authenticated user' do
+      before { login(user) }
+
+      it 'changes needed answer attributes' do
+        patch :correct_best, params: { id: answer, format: :js }
+        answer.reload
+        expect(answer).to be_best
+      end
+
+      it 'changes needed attributes for other answers' do
+        other_answer = create(:answer, question: question, best: true)
+        patch :correct_best, params: { id: answer, format: :js }
+        other_answer.reload
+        expect(other_answer).to_not be_best
+      end
+
+      it 'renders correct_best template' do
+        patch :correct_best, params: { id: answer, format: :js }
+        expect(response).to render_template :correct_best
+      end
+    end
+
+    context 'used by user, who is not author of the related question' do
+      before { login(non_author) }
+
+      it 'does not change best status of the answer' do
+        patch :correct_best, params: { id: other_answer, format: :js }
+        answer.reload
+        expect(answer).to_not be_best
+      end
+
+      it 'redirect to root path' do
+        patch :correct_best, params: { id: answer, format: :js }
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'used by unauthenticated user' do
+      it 'does not change best status of the answer' do
+        patch :correct_best, params: { id: other_answer, format: :js }
+        answer.reload
+        expect(answer).to_not be_best
+      end
+
+      it 'returns unauthorized 401 status code' do
+        patch :correct_best, params: { id: answer, format: :js }
+        expect(response).to have_http_status(401)
+      end
+    end
+  end    
 
 end
