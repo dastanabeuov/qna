@@ -26,10 +26,15 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem 'devise'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
+# UI
 
+gem 'jquery-rails'
+gem 'bootstrap', '~> 4.1.3'
+gem 'octicons_helper'
+gem 'octicons'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -60,6 +65,7 @@ group :test do
   gem 'chromedriver-helper'
   gem 'shoulda-matchers'
   gem 'rails-controller-testing'
+  gem 'launchy'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
