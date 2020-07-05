@@ -1,11 +1,11 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: %i[create]
-  before_action :set_answer, only: %i[update correct_best]
+  before_action :set_answer, only: %i[update destroy correct_best]
 
   def create
     @answer = @question.answers.new(answer_params)
-    @answer.user_id = current_user.id
+    @answer.user = current_user
     @answer.save
   end
 
@@ -13,6 +13,8 @@ class AnswersController < ApplicationController
     if current_user.author_of?(@answer)
       @answer.update(answer_params)
       @question = @answer.question
+    else
+      render :edit
     end
   end
 
@@ -28,7 +30,7 @@ class AnswersController < ApplicationController
   end
 
   def correct_best
-    @answer.best_answer
+    @answer.best_answer if current_user.author_of?(@answer)
   end  
 
   private
