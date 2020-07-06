@@ -14,7 +14,8 @@ class AnswersController < ApplicationController
       @answer.update(answer_params)
       @question = @answer.question
     else
-      render :edit
+      flash[:notice] = 'Your answer has not been update!'
+      redirect_to question_path(@question)
     end
   end
 
@@ -30,8 +31,13 @@ class AnswersController < ApplicationController
   end
 
   def correct_best
-    @answer.best_answer if current_user.author_of?(@answer)
-  end  
+    @question = @answer.question
+    if current_user.author_of?(@question)
+      @answer.best_answer
+    else
+      redirect_to question_path(@question)
+    end
+  end
 
   private
 

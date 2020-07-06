@@ -107,9 +107,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to eq correct_answer_body
       end
 
-      it 'redirects to root path' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), format: :js }
-
+      it 'render "update" template' do
+        patch :update, params: { id: answer answer: attributes_for(:answer), format: :js }
         expect(response).to render_template :update
       end
     end
@@ -165,9 +164,9 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer).to_not be_best
       end
 
-      it 'redirect to root path' do
+      it 'have http status Forbidden' do
         patch :correct_best, params: { id: answer, format: :js }
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(403)
       end
     end
 

@@ -43,4 +43,9 @@ feature 'Question editing', %q{
     visit question_path(question)
     expect(page).to_not have_link 'Edit question'
   end
+
+  scenario "unauthorized can't sees link to edit" do
+    visit question_path(question)
+    expect(page).to_not have_link 'Edit question'
+  end  
 end
