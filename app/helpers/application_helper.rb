@@ -3,6 +3,7 @@ module ApplicationHelper
              error: "alert alert-danger", alert: "alert alert-warning" }
 
   def flash_class(key)
+    key.to_sym
     ALERTS[key] || "alert alert-danger"
   end
 

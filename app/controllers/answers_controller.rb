@@ -20,7 +20,6 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer = Answer.find(params[:id])
     if current_user.author_of?(@answer)
       @answer.destroy
       flash[:notice] = 'Your answer has been deleted.'
