@@ -1,7 +1,9 @@
 doctype html
 html
   head
-    title Qna
+    meta charset='utf-8'
+    meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'  
+    title QNA - online testing platform!
     = csrf_meta_tags
     = csp_meta_tag
 
@@ -10,6 +12,7 @@ html
 
   body
     = render 'shared/header'
-    p.notice = notice
-    p.alert = alert
-    == yield
+    .container
+      =render 'shared/flash'  
+      = yield
+    =render 'shared/footer'  

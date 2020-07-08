@@ -9,7 +9,7 @@ feature 'User can create answer for the question', %q{
   given(:user) { create(:user) }
   given(:question) { create :question, user_id: user.id }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(user)
       visit question_path(question)
@@ -18,13 +18,12 @@ feature 'User can create answer for the question', %q{
     scenario 'create answer for the question' do
       fill_in 'Body', with: 'Answer text from question'
       click_on 'Answer on question'
-      expect(page).to have_content 'Answer was successfully created.'
       expect(page).to have_content 'Answer text from question'
     end
 
     scenario 'tries to create answer with wrong parameters for the question' do
       click_on 'Answer on question'
-      expect(page).to have_content "Your answer has not been published!"
+      #expect(page).to have_content "Your answer has not been published!"
       expect(page).to have_content "Body can't be blank"
     end
   end

@@ -1,1 +1,2 @@
-li= question.title
+- @questions.each do |q|
+   li class="list-group-item" = link_to q.title, q

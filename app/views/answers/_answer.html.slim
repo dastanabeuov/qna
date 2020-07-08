@@ -1,0 +1,16 @@
+ul.list-group
+  li.list-group-item.d-flex.justify-content-between.align-items-center
+    = answer.body
+    - if current_user&.author_of?(answer)
+      = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+        = f.label :body, 'Your answer', class: 'text-danger'
+        br/
+        = f.text_area :body, class: 'text-info'
+        = f.submit 'Save', class: 'btn btn-sm btn-outline-primary'
+      .btn-group
+        = link_to 'Edit answer', '#', class: 'btn btn-sm btn-outline-warning edit-answer-link', data: { answer_id: answer.id }
+        = link_to 'Delete answer', answer, class: 'ml-5', 
+        method: :delete, data: { confirm: 'Are your sure delete?' },
+                              class: 'btn btn-sm btn-outline-danger mr-5'
+        - if current_user&.author_of?(@question)
+          = link_to 'Correct answer', correct_best_answer_path(answer), class: 'btn btn-sm btn-outline-success correct-answer-link', id: "correct-best-answer-link-#{ answer.id }", method: :patch, remote: true
