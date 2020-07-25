@@ -6,6 +6,19 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+
+amazon:
+amazon:
+  service: S3
+  access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
+  region: "Asia Pacific (Seoul) ap-northeast-2"
+  bucket: "abeuov"
+  http_open_timeout: 0
+  http_read_timeout: 0
+  retry_limit: 0
+  upload: 
+    server_side_encryption: "aws:kms" # 'aws:kms' or 'AES256'
 # Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3

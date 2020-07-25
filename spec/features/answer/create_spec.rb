@@ -26,6 +26,16 @@ feature 'User can create answer for the question', %q{
       #expect(page).to have_content "Your answer has not been published!"
       expect(page).to have_content "Body can't be blank"
     end
+
+    scenario 'Save answer with attached file' do
+      fill_in 'Body', with: 'Answer Body text'
+
+      attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      click_on 'Answer on question'
+
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'      
+    end    
   end
 
   scenario 'Unauthenticated user tries to create answer for the question' do

@@ -28,11 +28,15 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem 'devise'
-# Use ActiveStorage variant
-# gem 'mini_magick', '~> 4.8'
-# UI
 
+#flexible authentication solution for Rails based
+gem 'devise'
+
+# Use ActiveStorage variant
+gem "aws-sdk-s3" #, require: false
+# gem 'mini_magick', '~> 4.8'
+
+# UI
 gem 'jquery-rails'
 gem 'bootstrap', '~> 4.1.3'
 gem 'devise-bootstrap-views'

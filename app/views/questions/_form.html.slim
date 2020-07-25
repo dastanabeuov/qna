@@ -10,5 +10,10 @@
           p
             = form.label :body
             = form.text_area :body, id: :question_body, class: "form-control"
+
+          p
+            = form.label :files
+            br/
+            = form.file_field :files, multiple: true, direct_upload: true, id: :question_file, direct_upload: true    
           
           p = form.submit 'Save question', class: "btn btn-outline-primary mt-2"
