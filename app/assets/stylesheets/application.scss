@@ -1,10 +1,15 @@
 @import 'bootstrap';
 @import 'common';
+@import 'direct_uploads';
 @import 'typography/icons';
 
 /*---All site size typography---*/
 html {
   font-size: 0.6rem;
+}
+
+body {
+  background-color: #E9ECEF;
 }
 
 @include media-breakpoint-up(xs) {

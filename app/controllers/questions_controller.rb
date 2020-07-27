@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show edit update destroy delete_file_attachment]
+  before_action :load_question, only: %i[show edit update]
 
   def index
     @questions = Question.all
@@ -32,9 +32,8 @@ class QuestionsController < ApplicationController
   end
 
   def delete_file_attachment
-    @file = ActiveStorage::Blob.find(params[:id])
-    @file.attachments.first.purge if current_user.author_of?(@file.attachable)
-    redirect_to @question
+    @space_image = ActiveStorage::Attachment.find(params[:id])
+    @space_image.purge
   end
 
   def new
@@ -55,7 +54,7 @@ class QuestionsController < ApplicationController
   private
 
   def load_question
-    @question ||= Question.with_attached_files.find(params[:id])
+    @question ||= Question.find(params[:id])
   end
 
   def question_params

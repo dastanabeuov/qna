@@ -4,15 +4,7 @@
       .card-body
         h1 = @question.title
         p = @question.body
-        - if @question.files.attached?
-          - @question.files.each do |file|
-            p class="file-#{file.id}"
-              = link_to file.filename.to_s, url_for(file)
-              - if current_user&.author_of?(@question)
-                = link_to (octicon "trash", :height => 16), delete_file_attachment_question_url(file),
-                      method: :delete,
-                      data: { confirm: 'Are you sure?' },
-                      class: "text-danger ml-2"
+        = render 'shared/files', resource: @question
 
         - if current_user&.author_of?(@question)
           .btn-group
@@ -36,7 +28,7 @@ section.new_answer.mt-5
       = render 'shared/errors', resource: @answer
     .card
       .card-body
-        = form_with model: [@question, @answer] do |form| 
+        = form_with model: [@question, @answer] do |form|
             p
               = form.label :body, 'Body'
               = form.text_area :body, id: :answer_body, class: "form-control"

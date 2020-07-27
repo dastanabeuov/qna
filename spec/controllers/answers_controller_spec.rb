@@ -28,11 +28,11 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid atributes' do
       it 'not save a answer in the database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js } }.to_not change(Answer, :count)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid_ans), format: :js } }.to_not change(Answer, :count)
       end
 
       it 'redirectto new view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js }
+        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid_ans), format: :js }
 
         expect(response).to render_template :create
       end
@@ -108,7 +108,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'render "update" template' do
-        patch :update, params: { id: answer answer: attributes_for(:answer), format: :js }
+        patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
         expect(response).to render_template :update
       end
     end

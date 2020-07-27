@@ -33,7 +33,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'devise'
 
 # Use ActiveStorage variant
-gem "aws-sdk-s3" #, require: false
+gem "aws-sdk-s3", require: false
 # gem 'mini_magick', '~> 4.8'
 
 # UI

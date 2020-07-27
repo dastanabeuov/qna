@@ -7,4 +7,12 @@ FactoryBot.define do
     title
     body { "MyText" }
   end
+
+  trait :invalid_ques do
+    title { nil }
+  end
+
+  trait :with_file do
+    files { Rack::Test::UploadedFile.new('spec/support/test.txt', 'text/plain') }
+  end  
 end
