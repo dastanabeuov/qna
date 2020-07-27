@@ -27,11 +27,6 @@ class AnswersController < ApplicationController
       flash[:notice] = 'Your answer has not been deleted.'
     end
     redirect_to question_path(@answer.question)
-  end
-
-  def delete_file_attachment
-    @space_image = ActiveStorage::Attachment.find(params[:id])
-    @space_image.purge
   end 
 
   def correct_best

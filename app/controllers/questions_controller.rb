@@ -31,11 +31,6 @@ class QuestionsController < ApplicationController
     redirect_to questions_path
   end
 
-  def delete_file_attachment
-    @space_image = ActiveStorage::Attachment.find(params[:id])
-    @space_image.purge
-  end
-
   def new
     @question = Question.new
   end
