@@ -4,17 +4,19 @@
       .card-body
         h1 = @question.title
         p = @question.body
+        = render 'shared/files', resource: @question
+
         - if current_user&.author_of?(@question)
           .btn-group
             = link_to 'Edit question', edit_question_path(@question), class: 'btn btn-sm btn-outline-warning edit-answer-link'
             = link_to 'Delete question', question_path(@question), 
             method: :delete, data: { confirm: 'Are your sure delete?' },
-                                  class: 'btn btn-sm btn-outline-danger'
+            class: 'btn btn-sm btn-outline-danger'
 
-        section.best-answer.mt-2.text-success
+        section.best-answer.mt-5.mb-3.text-success
           - if @question.answers.find_by(best: true)
             .best-answer-info
-              = render @question.answers.find_by(best: true)
+              = render @question.answers.find_by(best: true)              
 
     section.answers.mt-4
       - if !@answer.best
@@ -26,11 +28,16 @@ section.new_answer.mt-5
       = render 'shared/errors', resource: @answer
     .card
       .card-body
-        = form_with model: [@question, @answer] do |form| 
+        = form_with model: [@question, @answer] do |form|
             p
               = form.label :body, 'Body'
               = form.text_area :body, id: :answer_body, class: "form-control"
             
+            p
+              = form.label :files
+              br/
+              = form.file_field :files, multiple: true, direct_upload: true, id: :answer_file, direct_upload: true
+
             p = form.submit 'Answer on question', class: "btn btn-outline-primary mt-2"
 
     .mt-3

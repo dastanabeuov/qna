@@ -27,7 +27,7 @@ class AnswersController < ApplicationController
       flash[:notice] = 'Your answer has not been deleted.'
     end
     redirect_to question_path(@answer.question)
-  end
+  end 
 
   def correct_best
     @question = @answer.question
@@ -41,7 +41,7 @@ class AnswersController < ApplicationController
   private
 
   def set_question
-    @question ||= Question.find(params[:question_id])
+    @question = Question.find(params[:question_id])
   end
 
   def set_answer
@@ -49,6 +49,6 @@ class AnswersController < ApplicationController
   end  
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end

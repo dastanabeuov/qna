@@ -2,4 +2,5 @@ $('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
 
 <% if !@answer.errors.present? %>
   $('.answer-<%= @answer.id %>').html('<%= j render @answer.body %>');
+	$('.<%= "#answer-#{answer.id}" %> .files').html('<%= render 'shared/files', resource: answer %>');  
 <% end %>
