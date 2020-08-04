@@ -11,7 +11,7 @@ FactoryBot.define do
     body { nil }
   end
 
-  trait :from_file do
+  trait :from_answer_file do
     files { Rack::Test::UploadedFile.new('spec/support/test.txt', 'text/plain') }
   end  
 end

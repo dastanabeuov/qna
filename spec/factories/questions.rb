@@ -12,7 +12,7 @@ FactoryBot.define do
     title { nil }
   end
 
-  trait :with_file do
+  trait :from_question_file do
     files { Rack::Test::UploadedFile.new('spec/support/test.txt', 'text/plain') }
   end  
 end
