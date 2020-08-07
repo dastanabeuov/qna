@@ -1,0 +1,3 @@
+- if @question.answers.find_by(best: true)
+  .best-answer-info
+    = render @question.answers.find_by(best: true)

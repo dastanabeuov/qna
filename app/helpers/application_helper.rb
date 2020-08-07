@@ -13,5 +13,9 @@ module ApplicationHelper
 
   def github_url(author, repo)
     "https://github.com/#{ author }/#{ repo }"
+  end
+
+  def gist?(link)
+    link[:url].include?('gist.github.com')
   end  
 end

@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show edit update]
+  before_action :load_question, only: %i[show edit update destroy]
 
   def index
     @questions = Question.all
@@ -8,9 +8,12 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
+    @answer.links.new
   end
 
-  def edit; end
+  def edit
+    @question.build_award
+  end
 
   def update
     if current_user.author_of?(@question)
@@ -33,6 +36,7 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
+    @question.links.new # .build
   end
 
   def create
@@ -53,6 +57,8 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, files: [], 
+      links_attributes: [:id, :name, :url, :_destroy],
+      award_attributes: [:id, :title, :image, :_destroy])
   end
 end

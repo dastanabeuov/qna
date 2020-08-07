@@ -1,19 +1,36 @@
 .card
   .card-body
     .form-group
-      = form_with model: @question, local: true do |form|  
+      = form_with model: @question, local: true do |f|  
           = render 'shared/errors', resource: @question
           p
-            = form.label :title
-            = form.text_field :title, id: :question_title, class: "form-control"
+            = f.label :title
+            = f.text_field :title, id: :question_title, class: "form-control"
 
           p
-            = form.label :body
-            = form.text_area :body, id: :question_body, class: "form-control"
+            = f.label :body
+            = f.text_area :body, id: :question_body, class: "form-control"
 
           p
-            = form.label :files
+            = f.label :files
             br/
-            = form.file_field :files, multiple: true, direct_upload: true, id: :question_file, direct_upload: true    
+            = f.file_field :files, multiple: true, direct_upload: true, id: :question_file, direct_upload: true    
           
-          p = form.submit 'Save question', class: "btn btn-outline-primary mt-2"
+          p
+            = f.fields_for :links do |l|
+              = render 'shared/link_fields', f: l
+            p
+              = link_to_add_association octicon(:plus), f, :links, partial: 'shared/link_fields', title: "Add link"
+
+          p
+            = f.fields_for :award do |l|
+              .field
+                = l.label :title
+                br
+                = l.text_field :title, class: 'form-control'
+              .field
+                = l.label :image
+                br
+                = l.file_field :image, direct_upload: true
+
+          p = f.submit 'Save question', class: "btn btn-outline-primary mt-2"

@@ -1,0 +1,18 @@
+= form_with model: [@question, @answer] do |f|
+    p
+      = f.label :body, 'Body'
+      = f.text_area :body, id: :answer_body, class: "form-control"
+    
+    p
+      = f.label :files
+      br/
+      = f.file_field :files, multiple: true, direct_upload: true, id: :answer_file, direct_upload: true
+
+    p
+      = f.fields_for :links do |l|
+        = render 'shared/link_fields', f: l
+      p
+        = link_to_add_association octicon(:plus), f, :links, partial: 'shared/link_fields', title: "Add link"
+
+        p
+          = f.submit 'Answer on question', class: "btn btn-outline-primary mt-2"
