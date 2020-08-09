@@ -15,7 +15,7 @@ ul.list-group
         p
           = f.label :files 
           br/
-          = f.file_field :files, multiple: true, direct_upload: true, id: :answer_file, direct_upload: true
+          = f.file_field :files, multiple: true, direct_upload: true, id: :answer_file
         
         p
           = f.fields_for :links do |l|

@@ -11,7 +11,13 @@ class QuestionsController < ApplicationController
     @answer.links.new
   end
 
+  def new
+    @question.links.new
+    @question.build_award
+  end  
+
   def edit
+    @question.links.new
     @question.build_award
   end
 

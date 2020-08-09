@@ -5,7 +5,7 @@ $(document).on('turbolinks:load', function(){
        $(this).hide();
        var answerId = $(this).data('answerId');
        console.log(answerId);
-       $('form#edit-answer-' + answerId).removeClass('hidden');
+       $('section.answers form#edit-answer-' + answerId).removeClass('hidden');
    })
 });
 
