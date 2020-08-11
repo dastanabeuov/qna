@@ -7,18 +7,14 @@ feature 'User can view list of received awards', %q{
 } do
 
   given!(:user) { create(:user) }
-  given!(:question_one) { create(:question, author: user) }
-  given!(:question_two) { create(:question, author: user) }
-  given!(:award_one) { create(:award, question: question_one, recipient: user) }
-  given!(:award_two) { create(:award, question: question_two, recipient: user) }
+  given!(:question) { create(:question, user_id: user) }
+  given!(:award) { create(:award, question: question, recipient: user) }
 
   scenario 'Authenticated user sees list of his awards' do
     sign_in(user)
     visit awards_path
 
-    expect(page).to have_content award_one.title
-    expect(page).to have_link award_one.question.title, href: question_path(award_one.question)
-    expect(page).to have_content award_two.title
-    expect(page).to have_link award_two.question.title, href: question_path(award_two.question)
+    expect(page).to have_content award.title
+    expect(page).to have_link award.question.title, href: question_path(award.question)
   end
 end
