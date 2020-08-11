@@ -12,11 +12,10 @@ class Answer < ApplicationRecord
   validates :body, presence: true
 
   def best_answer
-    previous_answer = question.answers.find_by(best: true)
-
-    Answer.transaction do
-      previous_answer.update!(best: false) if previous_answer
+    ActiveRecord::Base.transaction do
+      question.answers.update_all(best: false)
       update!(best: true)
+      question.donative(user)
     end
   end
 end

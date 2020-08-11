@@ -12,6 +12,6 @@ class Question < ApplicationRecord
   validates :title, :body, presence: true
 
   def donative(user)
-    award.update(recipient: user)
+    award.update!(recipient: user)
   end
 end
