@@ -12,6 +12,7 @@ class QuestionsController < ApplicationController
   end
 
   def new
+    @question = Question.new
     @question.links.new
     @question.build_award
   end  
@@ -40,18 +41,13 @@ class QuestionsController < ApplicationController
     redirect_to questions_path
   end
 
-  def new
-    @question = Question.new
-    @question.links.new # .build
-  end
-
   def create
     @question = current_user.questions.new(question_params)
 
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
     else
-      flash[:notice] = 'Your question not created.'
+      flash[:error] = 'Your question not created.'
       render :new
     end
   end
