@@ -2,4 +2,5 @@ div class="btn-group mb-5" role="group" aria-label="Basic example"
   = link_to 'Ask questions', new_question_path, class: "btn btn-outline-primary"
 
 ul class="list-group"
-  = render 'question'
+	- @questions.each do |q|
+	   li class="list-group-item" = link_to q.title, q

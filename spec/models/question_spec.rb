@@ -8,4 +8,22 @@ RSpec.describe Question, type: :model do
   it 'have many attached files' do
     expect(Question.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
+
+  describe 'method "donative":' do
+    before do 
+      question.answers.last.best_answer
+    end
+
+    it 'question correct answer by best' do
+      expect(answers.last).to be_best
+    end
+
+    it 'question correct only one best answer' do
+      expect(question.answers.where(best: true).count).to eq 1
+    end
+  
+    it 'question only correct answer donative author user' do
+      expect(question.user_id).to be_donative
+    end
+  end  
 end

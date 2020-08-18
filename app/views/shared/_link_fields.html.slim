@@ -1,0 +1,12 @@
+.nested-fields
+  .field
+    = f.label :name
+    br
+    = f.text_field :name, class: "form-control"
+  .field
+    = f.label :url
+    br
+    = f.text_field :url, class: "form-control"
+  .field
+    = f.check_box :_destroy
+    = f.label :_destroy, "Remove", class: "pl-2"

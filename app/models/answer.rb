@@ -5,15 +5,17 @@ class Answer < ApplicationRecord
   belongs_to :question
 
   has_many_attached :files
+  has_many :links, dependent: :destroy, as: :linkable
+
+  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   validates :body, presence: true
 
   def best_answer
-    previous_answer = question.answers.find_by(best: true)
-
-    Answer.transaction do
-      previous_answer.update!(best: false) if previous_answer
+    ActiveRecord::Base.transaction do
+      question.answers.update_all(best: false)
       update!(best: true)
+      question.donative(user)
     end
-  end 
+  end
 end

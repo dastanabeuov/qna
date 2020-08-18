@@ -1,0 +1,6 @@
+- if resource.award.present?
+  = octicon :gift, height: 22
+  .award-image
+    = image_tag url_for(resource.award.image)
+  .award-title
+    = resource.award.title

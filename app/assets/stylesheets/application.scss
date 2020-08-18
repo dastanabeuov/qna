@@ -9,7 +9,7 @@ html {
 }
 
 body {
-  background-color: #E9ECEF;
+  background-color: #FFFFFF;
 }
 
 @include media-breakpoint-up(xs) {
@@ -36,7 +36,22 @@ body {
   }
 }
 
+/*---Header---*/
+.bg-light {
+  background-color: rgba(245, 245, 245, 0.9) !important;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px !important;
+  opacity: 1; top: 0px !important;
+}
+
+.navbar-brand {
+  color: #007bff !important;
+}
+
+.nav-item.welcome {
+  color: rgba(0, 0, 0, 0.5);  
+}
+
 /*---Footer---*/
 .page-footer {
-  background-color: #ECECEC;
+  background-color: #EEEEEE;
 }
