@@ -14,29 +14,28 @@ module Votable
   end
 
   def vote_count
-    votes.sum(:value) + 1
+    votes.sum(:value)
   end
 
   def liked?(user)
-    duplicate_vote?(user, 1)
+    duplicated_vote?(user, 1)
   end
 
   def disliked?(user)
-    duplicate_vote?(user, -1)
+    duplicated_vote?(user, -1)
   end
 
   private
 
   def vote(user, value)
-    return false if user.author_of?(self) || duplicate_vote?(user, value)
+    return false if user.author_of?(self) || duplicated_vote?(user, value)
 
     transaction do
-      last_vote(user)
       votes.create!(user: user, value: value)
     end
   end
 
-  def duplicate_vote?(user, value)
+  def duplicated_vote?(user, value)
     last_vote(user)&.value == value
   end
 
