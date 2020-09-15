@@ -1,11 +1,14 @@
 ul.list-group
   li.list-group-item.d-flex.justify-content-between.align-items-center
     = answer.body
-    .files
+    p
       = render 'shared/files', resource: answer
-    .links
+    p
       = render 'shared/links', resource: answer
-
+    p  
+      .voting
+        = render 'shared/voting', resource: answer
+      
     - if current_user.author_of?(answer)
       = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|    
         p
