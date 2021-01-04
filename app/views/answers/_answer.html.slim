@@ -1,37 +1,36 @@
-ul.list-group
-  li.list-group-item.d-flex.justify-content-between.align-items-center
-    = answer.body
-    p
-      = render 'shared/files', resource: answer
-    p
-      = render 'shared/links', resource: answer
-    p  
-      .voting
-        = render 'shared/voting', resource: answer
-      
-    - if current_user.author_of?(answer)
-      = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|    
-        p
-          = f.label :body
-          = f.text_area :body, class: 'form-control'
+hr
+- if answer.best?
+  p.text-success The best answer
 
-        p
-          = f.label :files 
-          br/
-          = f.file_field :files, multiple: true, direct_upload: true, id: :answer_file
-        
-        p
-          = f.fields_for :links do |l|
-            = render 'shared/link_fields', f: l
-          p
-            = link_to_add_association octicon(:plus), f, :links, partial: 'shared/link_fields', title: "Add link"            
+p = answer.body
+p = render 'shared/files', resource: answer
+p = render 'shared/links', resource: answer
+p = render 'shared/voting', resource: answer
+- if current_user.author_of?(answer)
+  .btn-group
+    = link_to (octicon 'pencil', height: 18), '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    = link_to (octicon 'trash', height: 18), answer, method: :delete, data: { confirm: 'Are your sure delete?' }
+-if current_user.author_of?(answer.question)
+  = link_to (octicon 'check', height: 18), set_best_answer_path(answer), class: 'set-best-answer', data: { answer_id: answer.id }, method: :patch, remote: true
 
-        p = f.submit 'Save', class: 'btn btn-sm btn-outline-primary save'
+- if current_user.author_of?(answer)
+  = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+    .form-group
+      div class="answer-errors-#{answer.id}"
+    .form-group
+      = f.label :body
+      = f.text_area :body, class: 'form-control'
+    .form-group
+      = f.label :files 
+      br/
+      = f.file_field :files, multiple: true, direct_upload: true, id: :answer_file
+    .form-group
+      = f.fields_for :links do |l|
+        = render 'shared/link_fields', f: l
+    .form-group
+      = link_to_add_association octicon(:plus), f, :links, partial: 'shared/link_fields', title: "Add link"            
 
-      .btn-group
-        = link_to 'Edit answer', '#', class: 'btn btn-sm btn-outline-warning edit-answer-link', 
-        data: { answer_id: answer.id }
-        = link_to 'Delete answer', answer, method: :delete, data: { confirm: 'Are your sure delete?' },
-        class: 'btn btn-sm btn-outline-danger'
-        - if current_user.author_of?(@question)
-          = link_to 'Correct answer', correct_best_answer_path(answer), class: 'btn btn-sm btn-outline-success correct-answer-link', id: "correct-best-answer-link-#{ answer.id }", method: :patch, remote: true
+    = f.submit 'Save', class: 'btn btn-sm btn-outline-primary save'
+    - if answer.best?
+      p.text-suess T
+      he best answer

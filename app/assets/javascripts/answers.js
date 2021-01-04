@@ -1,21 +1,20 @@
-//edit answer render form
+//Edit answer render form
 $(document).on('turbolinks:load', function(){
    $('.answers').on('click', '.edit-answer-link', function(e) {
        e.preventDefault();
        $(this).hide();
        var answerId = $(this).data('answerId');
        console.log(answerId);
-       $('section.answers form#edit-answer-' + answerId).removeClass('hidden');
+       $('.answers form#edit-answer-' + answerId).removeClass('hidden');
    })
 });
 
-//correct answer choose
+//Best answer choose
 $(document).on('turbolinks:load', function(){
-   $('.answers').on('click', '.correct-answer-link', function(e) {
+   $('.answers').on('click', '.set-best-answer', function(e) {
        e.preventDefault();
        $(this).hide();
        var answerId = $(this).data('answerId');
        console.log(answerId);
-       $('form#correct-answer-' + answerId).removeClass('hidden');
    })
 });

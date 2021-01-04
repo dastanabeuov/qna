@@ -1,6 +1,6 @@
-$('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
-
-<% if !@answer.errors.present? %>
-  $('.answer-<%= @answer.id %>').html('<%= j render @answer %>');
-	$('.<%= "#answer-#{@answer.id}" %> .files').html('<%= render 'shared/files', resource: @answer %>');  
+<% if  @answer.errors.present? %>
+  $('.answer-errors-' + '<%= @answer.id %>').html('<%= render 'shared/errors', resource: @answer %>');
+<% else %>
+  $('.answer-errors-' + '<%= @answer.id %>').html('')
+  $('.answers').html('<%= j render @answers %>')
 <% end %>

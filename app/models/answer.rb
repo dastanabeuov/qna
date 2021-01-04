@@ -14,8 +14,12 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
-  def best_answer
-    ActiveRecord::Base.transaction do
+  def best?
+    self.best == true
+  end
+
+  def set_best
+    transaction do 
       question.answers.update_all(best: false)
       update!(best: true)
       question.donative(user)

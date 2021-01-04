@@ -5,9 +5,9 @@ Rails.application.routes.draw do
   resources :questions do
     patch :like, on: :member
     patch :dislike, on: :member    
+    
     resources :answers, shallow: true do 
-      patch :correct_best, on: :member
-
+      patch :set_best, on: :member
       patch :like, on: :member
       patch :dislike, on: :member      
     end

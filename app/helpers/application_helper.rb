@@ -4,7 +4,7 @@ module ApplicationHelper
 
   def flash_class(key)
     key.to_sym
-    ALERTS[key] || "alert alert-danger"
+    ALERTS[key] || "alert alert-success"
   end
 
   def current_year

@@ -1,39 +1,12 @@
-.card
-  .card-body
-    .card
-      .card-body
-        h1 = @question.title
-        p = @question.body
-        p = render 'shared/files', resource: @question
-        p = render 'shared/links', resource: @question
-        p = render 'award', resource: @question
-        p
-          - if current_user.author_of?(@question)
-            .btn-group.mt-3
-              = link_to 'Edit question', edit_question_path(@question), class: 'btn btn-sm btn-outline-warning edit-answer-link'
-              = link_to 'Delete question', question_path(@question), 
-              method: :delete, data: { confirm: 'Are your sure delete?' },
-              class: 'btn btn-sm btn-outline-danger'
-        p      
-          .voting
-            = render 'shared/voting', resource: @question
+.question-errors
+.question
+  = render @question
 
-        hr
-        
-        section.best-answer.mt-5.mb-3.text-success
-          = render 'best_answer'            
+.answers
+  = render @question.answers
 
-    section.answers.mt-4
-      - if !@answer.best
-        = render @question.answers
+.new-answer-form
+  = render 'answers/form'
 
-section.new_answer.mt-5
-  - if current_user
-    .answer-errors
-      = render 'shared/errors', resource: @answer
-    .card
-      .card-body
-        = render 'answers/form'
-
-.mt-3
-  = link_to 'Back', root_path, class: "btn btn-sm btn-outline-secondary"
+hr
+= link_to 'Back', root_path

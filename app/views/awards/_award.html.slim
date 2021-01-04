@@ -1,8 +1,3 @@
-.card style="width: 12rem;"
-  = image_tag url_for(award.image), class: "card-img-top"
-  .card-body
-    h5 class="card-title" = award.title
-    
-    p class="card-text" Best answer for:
-    
-    p = link_to award.question.title, question_path(award.question)
+= image_tag url_for(award.image)
+= award.title
+= link_to award.question.title, question_path(award.question)

@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: %i[create]
-  before_action :set_answer, only: %i[update destroy correct_best]
+  before_action :set_answer, only: %i[update destroy set_best]
 
   include Voting
 
@@ -12,12 +12,14 @@ class AnswersController < ApplicationController
   end
 
   def update
+    @answers ||= Answer.all
     if current_user.author_of?(@answer)
       @answer.update(answer_params)
+      flash[:success] = 'Your answer has been update!'
       @question = @answer.question
     else
-      flash[:notice] = 'Your answer has not been update!'
       redirect_to question_path(@question)
+      flash[:error] = 'Your answer has not been update!'
     end
   end
 
@@ -31,13 +33,9 @@ class AnswersController < ApplicationController
     redirect_to question_path(@answer.question)
   end 
 
-  def correct_best
+  def set_best
     @question = @answer.question
-    if current_user.author_of?(@question)
-      @answer.best_answer
-    else
-      redirect_to question_path(@question)
-    end
+    @answer.set_best if current_user.author_of?(@question)
   end
 
   private
@@ -48,7 +46,7 @@ class AnswersController < ApplicationController
 
   def set_answer
     @answer = Answer.find(params[:id])
-  end  
+  end
 
   def answer_params
     params.require(:answer).permit(:body, files: [], 

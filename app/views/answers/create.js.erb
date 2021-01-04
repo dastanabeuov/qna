@@ -1,6 +1,6 @@
-$('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
-
-<% if @answer.persisted? %>
-  $('.answers').append('<%= j render @answer %>');
-  $('#answer_body').val('');
+<% if  @answer.errors.present? %>
+  $('.answer-errors').append('<%= render 'shared/errors', resource: @answer %>');
+<% else %>
+  $('.answer-errors').html('')
+  $('.answers').html('<%= j render @question.answers %>')
 <% end %>

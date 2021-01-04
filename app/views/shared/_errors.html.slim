@@ -1,8 +1,6 @@
-- if resource.present? && resource.errors.any?
-  = content_tag :div, class: 'resource-errors', data: { resource_id: resource.id } do
-    h2 class="text-danger"
-      = t('.header', count: resource.errors.count)
-
-    ul
-      - resource.errors.full_messages.each do |message|
-        li class="text-danger" = message
+-if resource.present? && resource.errors.any?
+	.text-danger.mt-5
+	  p = pluralize(resource.errors.count, "error")
+	  ul 
+	    -resource.errors.full_messages.each do |message|
+	      li= message
