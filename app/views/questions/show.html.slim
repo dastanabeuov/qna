@@ -1,11 +1,11 @@
-.question-errors
-.question
-  = render @question
+.question data-id="#{@question.id}" data-user="#{current_user.id if current_user}"
+  = render 'question_block', question: @question
 
 .answers
   = render @question.answers
 
 .new-answer-form
+  h3 Add additional answer
   = render 'answers/form'
 
 hr

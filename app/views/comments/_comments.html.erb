@@ -1,0 +1,8 @@
+<p>Comments</p>
+<ul class="#{resource_name(resource)}-#{resource.id}-comments-list">
+<% resource.comments.each do |comment| %>
+  <li class="comment-#{comment.id}">
+    <%= comment.text %>
+  </li>
+<% end %>
+</ul>

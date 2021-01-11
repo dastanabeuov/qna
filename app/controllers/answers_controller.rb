@@ -1,10 +1,11 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!
+  include Voting
+  
   before_action :set_question, only: %i[create]
   before_action :set_answer, only: %i[update destroy set_best]
-
-  include Voting
-
+  
+  after_action :publish_answer, only: %i[create]
+  
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
@@ -39,6 +40,17 @@ class AnswersController < ApplicationController
   end
 
   private
+
+  def publish_answer
+    return if @answer.errors.any?
+    ActionCable.server.broadcast "answers-for-question-#{@answer.question_id}", 
+      {
+        answer: @answer,
+        attachments:  @answer.attachments_attributes,
+        voting: @answer.voting,
+        question_author: @answer.question.user_id
+      }
+  end
 
   def set_question
     @question = Question.find(params[:question_id])

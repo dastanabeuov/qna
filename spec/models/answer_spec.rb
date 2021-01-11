@@ -4,7 +4,8 @@ RSpec.describe Answer, type: :model do
   let!(:question) { create(:question) }
   let!(:answers) { create_list(:answer, 3, question: question) }
 	
-	it { should validate_presence_of :body }
+  it { should have_many(:comments).dependet(:destroy) }
+  it { should validate_presence_of :body }
   it { should belong_to :question }
 
   describe 'method "best_answer":' do
