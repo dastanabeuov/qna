@@ -1,27 +1,28 @@
 $ ->
   answersList = $('.answers')
-  questionId = $('.question').data('id')
-  userId = $('.question').data('user')
 
   App.cable.subscriptions.create('AnswersChannel', {
     connected: ->
-      @perform 'follow', { id: questionId }
+      console.log 'Connected follow!'
+      @perform 'follow', { id: gon.question_id }
     ,
     received: (data) ->
       answersList.append(JST['templates/answer']({
         answer: data.answer,
-        attachments: data.attachments,
-        current_user: userId,
-        voting: data.voting,
+        attachments: data.files,
+        current_user: gon.question_user_id,
+        votes: data.votes,
+        comments: data.comments,
         question_author: data.question_author
       }))
   })
 
   App.cable.subscriptions.create('CommentsChannel', {
     connected: ->
-      @perform 'follow_answer', {id: questionId}
+      console.log 'Connected follow_answer!'
+      @perform 'follow_answer', {id: gon.question_id}
     ,
     received: (data) ->
       object = JSON.parse(data)
-      $('.answer-' + object.id + '-comments').append('<p>'+object.comment.text+'</p>')
+      $('.answer-' + object.id + '-comments').append('<li class="comment-'+object.comment.id+'">'+object.comment.text+'</li>')
   })

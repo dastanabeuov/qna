@@ -46,9 +46,9 @@ class AnswersController < ApplicationController
     ActionCable.server.broadcast "answers-for-question-#{@answer.question_id}", 
       {
         answer: @answer,
-        attachments:  @answer.attachments_attributes,
-        voting: @answer.voting,
-        question_author: @answer.question.user_id
+        files:  @answer.files,
+        votes: @answer.votes,
+        comments: @answer.comments,
       }
   end
 
@@ -58,6 +58,7 @@ class AnswersController < ApplicationController
 
   def set_answer
     @answer = Answer.find(params[:id])
+    gon.answer_id = @answer.id
   end
 
   def answer_params

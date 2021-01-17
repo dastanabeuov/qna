@@ -1,7 +1,7 @@
 - if resource.files.attached?
 	- resource.files.each do |file|
 	    = link_to file.filename.to_s, url_for(file)	    
-	    - if current_user.author_of?(resource)
+	    - if current_user && current_user.author_of?(resource)
 	      = link_to (octicon "trash", height: 18), attachment_path(file.id), method: :delete,
 	      remote: true,
 	      data: { confirm: 'Are you sure?' },

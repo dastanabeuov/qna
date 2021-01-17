@@ -13,6 +13,7 @@ p = render 'shared/voting', resource: answer
 - if current_user && current_user.author_of?(answer.question)
   = link_to (octicon 'check', height: 18), set_best_answer_path(answer), class: 'set-best-answer', data: { answer_id: answer.id }, method: :patch, remote: true
 
+.answer-form
 - if current_user && current_user.author_of?(answer)
   = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
     .form-group
@@ -29,12 +30,8 @@ p = render 'shared/voting', resource: answer
         = render 'shared/link_fields', f: l
     .form-group
       = link_to_add_association octicon(:plus), f, :links, partial: 'shared/link_fields', title: "Add link"            
-
     = f.submit 'Save', class: 'btn btn-sm btn-outline-primary save'
-    - if answer.best?
-      p.text-suess T
-      he best answer
   
-div class='comments answer-#{answer.id}-comments'
+.comments
   = render "comments/comments", resource: answer
   = render "comments/form", resource: answer

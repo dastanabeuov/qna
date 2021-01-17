@@ -11,6 +11,8 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answer.links.new
+    gon.answer_user_id = @answer.user_id
+    gon.question_user_id = @question.user_id
   end
 
   def new
@@ -60,6 +62,7 @@ class QuestionsController < ApplicationController
 
   def load_question
     @question ||= Question.find(params[:id])
+    gon.question_id = @question.id
   end
 
   def publish_question

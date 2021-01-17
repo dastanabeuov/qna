@@ -10,14 +10,25 @@ feature 'User can see question any page', %q{
   given(:guest) { create(:user) }
   
   context "mulitple sessions" do
-    scenario "question appears on another user's page" do
+    scenario "question appears on another user's page and add comments." do
       Capybara.using_session('user') do
         sign_in(user)
         visit questions_path
+
+        fill_in 'Body', with: 'First test answer'
+        click_on 'Save answer'
+
+        expect(page).to have_content 'First test answer'
       end
  
       Capybara.using_session('guest') do
+        sign_in(guest)
         visit questions_path
+
+        fill_in 'Body', with: 'Second test answer'
+        click_on 'Save answer'
+
+        expect(page).to have_content 'Second test answer'
       end
 
       Capybara.using_session('user') do
@@ -32,6 +43,7 @@ feature 'User can see question any page', %q{
       end
 
       Capybara.using_session('guest') do
+        sign_in(guest)
         expect(page).to have_content 'Test question'
       end
     end
