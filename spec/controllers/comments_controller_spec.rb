@@ -13,7 +13,9 @@ RSpec.describe CommentsController, type: :controller do
   		it 'only question' do
   			visit question_path(question)
         post :create, params: { commentable_id: question.id, commentable_type: question, user: user, text: 'My text' }
-  		end
+
+        expect(question.comments).to eq 'My text'
+      end
   	end
   end
 
@@ -21,8 +23,10 @@ RSpec.describe CommentsController, type: :controller do
   	context 'with answer comment' do
   		it 'only answer' do
   			visit question_path(question)
-        post :create, params: { commentable_id: question.id, commentable_type: answer, user: user, text: 'My text' }
-  		end
+        post :create, params: { commentable_id: answer.id, commentable_type: answer, user: user, text: 'My text' }
+  		  
+        expect(answer.comments).to eq 'My text'
+      end
   	end
   end
 end

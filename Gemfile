@@ -22,7 +22,7 @@ gem 'devise-bootstrap-views'
 gem 'octicons_helper'
 gem 'octicons'
 gem 'bootsnap', '>= 1.1.0', require: false
-# gem 'skim'
+gem 'skim'
 gem 'handlebars_assets'
 gem 'gon'
 

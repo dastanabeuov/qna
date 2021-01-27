@@ -1,9 +1,11 @@
 doctype html
 html
   head
+    title QNA - online testing platform!
     meta charset='utf-8'
     meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'  
-    title QNA - online testing platform!
+    
+    = Gon::Base.render_data
     = action_cable_meta_tag
     = csrf_meta_tags
 

@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   include Voting
-  
+
+  before_action :authenticate_user!, only: %i[new create show]
   before_action :load_question, only: %i[show edit update destroy]
   after_action :publish_question, only: [:create]
 
@@ -11,8 +12,6 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answer.links.new
-    gon.answer_user_id = @answer.user_id
-    gon.question_user_id = @question.user_id
   end
 
   def new
@@ -62,16 +61,15 @@ class QuestionsController < ApplicationController
 
   def load_question
     @question ||= Question.find(params[:id])
-    gon.question_id = @question.id
   end
 
   def publish_question
     return if @question.errors.any?
     ActionCable.server.broadcast(
-      'questions',
+      'questions-list',
       ApplicationController.render(
-        partial: 'questions/question',
-        locals: { question: @question }
+        partial: 'questions/question_item',
+        locals: { question: @question }, layout: false
       )
     )
   end

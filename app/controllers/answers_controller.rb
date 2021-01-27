@@ -1,9 +1,10 @@
 class AnswersController < ApplicationController
   include Voting
-  
+
+  before_action :authenticate_user!, only: %i[new create]
   before_action :set_question, only: %i[create]
   before_action :set_answer, only: %i[update destroy set_best]
-  
+
   after_action :publish_answer, only: %i[create]
   
   def create
@@ -46,9 +47,9 @@ class AnswersController < ApplicationController
     ActionCable.server.broadcast "answers-for-question-#{@answer.question_id}", 
       {
         answer: @answer,
-        files:  @answer.files,
-        votes: @answer.votes,
-        comments: @answer.comments,
+        attachments:  @answer.files,
+        rating: @answer.vote_count,
+        question_author: @answer.question.user_id
       }
   end
 
@@ -58,7 +59,6 @@ class AnswersController < ApplicationController
 
   def set_answer
     @answer = Answer.find(params[:id])
-    gon.answer_id = @answer.id
   end
 
   def answer_params

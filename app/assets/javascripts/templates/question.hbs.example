@@ -1,2 +1,0 @@
-.collection-item
-  <a href="/questions/{{question.id}}">{{question.title}}</a>
