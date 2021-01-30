@@ -1,70 +1,62 @@
 require 'rails_helper'
 
-feature 'User can update his answer', "
-  In order to correct or specify the answer
-  As a User
-  I'd like to be able to update my answer
-" do
+feature 'UPDATE ANSWER', %q{
+  Authenticated user update
+  Other authenticated user update
+  Unauthenticated user update
+} do
+
   given(:user) { create(:user) }
-  given(:non_author) { create(:user) }
+  given(:user2 create(:user) }
   given(:question) { create(:question, user: user ) }
   given!(:answer) { create(:answer, question: question, user: user) }
 
-  context 'Authenticated user' do
-    context 'as author of answer' do
-      background do
-        sign_in(user)
+  before { sign_in(user) }
 
-        visit question_path(question)
-      end
+  scenario 'Authenticated user update' do
+    visit question_path(question)
 
-      scenario 'updates his answer', js: true do
-        within '.answers' do
-          click_on 'Edit answer'
+    within '.answers' do
+      click_on 'Edit answer'
 
-          fill_in 'Body', with: 'Updated Answer'
-          click_on 'Save'
-        end
-
-        expect(current_path).to eq question_path(question)
-        within '.answers' do
-          expect(page).to have_content 'Updated Answer'
-        end
-      end
-
-      scenario 'tries to update his answer with invalid attributes', js: true do
-        within '.answers' do
-          click_on 'Edit answer'
-
-          fill_in 'Body', with: ''
-          click_on 'Save'
-        end
-
-        expect(current_path).to eq question_path(question)
-        expect(page).to have_content "Body can't be blank"
-      end
+      fill_in 'Body', with: 'NewText'
+      click_on 'Save'
     end
 
-    context 'not as Author of answer' do
-      background { sign_in(non_author) }
-
-      scenario "tries to update other user's answer", js: true do
-        visit question_path(question)
-
-        within '.answers' do
-          expect(page).to_not have_link 'Edit answer'
-        end
-      end
+    expect(current_path).to eq question_path(question)
+    within '.answers' do
+      expect(page).to have_content 'NewText'
     end
   end
 
-  context 'Unauthenticated user' do
-    scenario 'tries to update answer' do
-      visit question_path(question)
+  scenario 'tries to update his answer with invalid attributes', js: true do
+    within '.answers' do
+      click_on 'Edit answer'
 
-      within '.answers' do
-        expect(page).to_not have_link 'Edit answer'
-      end
+      fill_in 'Body', with: ''
+      click_on 'Save'
+    end
+
+      expect(current_path).to eq question_path(question)
+      expect(page).to have_content "Body can't be blank"
+    end
+  end
+
+  scenario 'Other authenticated user update' do
+    sign_in(non_author) }
+
+    visit question_path(question)
+
+    within '.answers' do
+      expect(page).to_not have_link 'Edit answer'
+    end
+  end
+
+  scenario 'Unauthenticated user update' do
+    visit question_path(question)
+
+    within '.answers' do
+      expect(page).to_not have_link 'Edit answer'
     end
   end
 end

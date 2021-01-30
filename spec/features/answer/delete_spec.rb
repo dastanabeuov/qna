@@ -1,36 +1,36 @@
 require 'rails_helper'
 
-feature 'User can delete answer', %q{
-  Authenticate user can delete his answer
+feature 'DELETE ANSWER', %q{
+  Authenticated user delete answer
+  Other authenticated user delete
+  Unauthenticated user delete answer
 } do
 
   given(:user) { create(:user) }
-  given(:question) { create :question, user_id: user.id }
-  given!(:answer) { create :answer, question: question, user_id: user.id }
+  given(:user2) { create(:user) }
+  given(:question) { create :question, user: user }
+  given!(:answer) { create :answer, question: question, user: user }
 
-  scenario 'delete answer if user logged' do
+  scenario 'Authenticated user delete' do
     sign_in(user)
     visit question_path(question)
+    
     click_on 'Delete answer'
+    
     expect(page).to have_content 'Your answer has been deleted.'
-    expect(page).to have_no_content 'MyTextAnswer'
+    expect(page).to have_no_content 'MyText'
   end
 
-  describe 'button for Delete answer is not visible' do
-    given(:invalid_user) { create(:user) }
-    given(:invalid_question) { create :question, user_id: invalid_user.id }
-    given!(:answer) { create :answer, question: invalid_question, user_id: invalid_user.id }
-
-    scenario 'if the user is not the author' do
-      sign_in(user)
-      visit question_path(invalid_question)
-      expect(page).to have_no_link('Delete question')
-    end
-
-    scenario 'If the user is not logged in' do
-      visit question_path(invalid_question)
-      expect(page).to have_no_link('Delete answer')
-    end
+  scenario 'Other authenticated user delete' do
+    sign_in(user2)
+    visit question_path(question)
+    
+    expect(page).to have_no_link('Delete answer')
   end
 
+  scenario 'Unauthenticated user delete' do
+    visit question_path(invalid_question)
+
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+  end
 end

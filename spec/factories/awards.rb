@@ -4,11 +4,10 @@ FactoryBot.define do
   end
 
   factory :award do
-    award_title
+    title { sequence :award_title }
     image { Rack::Test::UploadedFile.new('spec/support/image.png') }
-  end
-
-  trait :invalid_img do
-    image { nil }
+    trait :invalid do
+      image { nil }
+    end
   end
 end

@@ -1,9 +1,9 @@
 h1 = question.title
 p = question.body
-p = render 'shared/files', resource: question
-p = render 'shared/links', resource: question
-p = render 'award', resource: question
-p = render 'shared/voting', resource: question
+p = render 'attachments/attachment', resource: question
+p = render 'links/links', resource: question
+p = render 'awards/award', resource: question
+p = render 'votes/voting', voteable: question
 - if current_user && current_user.author_of?(question)
   = link_to (octicon "pencil", height: 18), edit_question_path(question), data: { question_id: question.id }, class: 'edit-question-link'
   = link_to (octicon "trash", height: 18), question_path(question), 
@@ -19,14 +19,14 @@ p = render 'shared/voting', resource: question
       = f.label :body
       = f.text_area :body, id: :question_body, class: "form-control"
   .form-group
-    = f.label :files
+    = f.label :attachments
     br
-    = f.file_field :files, multiple: true
+    = f.file_field :attachments, multiple: true
   .form-group
     = f.fields_for :links do |l|
-     = render 'shared/link_fields', f: l
+     = render 'links/link_fields', f: l
   .form-group
-    = link_to_add_association octicon(:plus), f, :links, partial: 'shared/link_fields', title: "Add link"
+    = link_to_add_association octicon(:plus), f, :links, partial: 'links/link_fields', title: "Add link"
   .form-group
     = f.fields_for :award do |l|
       .field

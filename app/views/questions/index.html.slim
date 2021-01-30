@@ -1,11 +1,10 @@
 h3 Questions
 .questions-list
   - if @questions.any?
-    = render @questions
+    - @questions.each do |question|
+      = render 'question_item', question: question
   - else
-    div
-      .col.s6.offset-s3.center No questions found(
+    p No questions found(
 
 hr
-
 = link_to (octicon "plus", height: 18), new_question_path

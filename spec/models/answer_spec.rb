@@ -1,31 +1,35 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
-  let!(:question) { create(:question) }
-  let!(:answers) { create_list(:answer, 3, question: question) }
-	
-  it { should have_many(:comments).dependet(:destroy) }
-  it { should validate_presence_of :body }
+  it { should belong_to :user }
   it { should belong_to :question }
 
-  describe 'method "best_answer":' do
+  it { should have_many(:links).dependet(:destroy) }
+  it { should have_many(:files)
+  it { should have_many(:comments).dependet(:destroy) }
+
+  it 'have many attached files' do
+    expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
+  end
+
+  it { should validate_presence_of :body }
+
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+  let(:answers) { create_list(:answer, 3, question: question, user: user) }
+
+  describe 'method "set_best":' do
     before do 
-      answers.last.best_answer
-      answers.first.best_answer
+      answers.last.set_best
+      answers.first.set_best
     end
 
-    it 'correct answer by best' do
+    it 'correct answer set_best' do
       expect(answers.first).to be_best
     end
 
-    it 'correct only one best answer' do
+    it 'correct answer only one set_best' do
       expect(question.answers.where(best: true).count).to eq 1
     end
-  
-    it 'have many attached files' do
-      expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
-    end
-
   end
-
 end

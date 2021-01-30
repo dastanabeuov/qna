@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user_id: user.id) }
+  let(:question) { create(:question, user: user) }
 
   describe 'GET #index' do
-    let!(:questions) { create_list(:question, 3, user_id: user.id) }
+    let!(:questions) { create_list(:question, 3, user: user) }
     before { get :index }
 
     it 'populates an array of all questions' do
@@ -66,11 +66,13 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'communication with logged in user is established' do
         post :create, params: { question: attributes_for(:question) }
+
         expect(assigns(:question).user_id).to eq user.id
       end
 
       it 'redirectto show view' do
         post :create, params: { question: attributes_for(:question) }
+
         expect(response).to redirect_to assigns(:question)
       end
     end
@@ -82,6 +84,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirectto new view' do
         post :create, params: { question: attributes_for(:question, :invalid_ques) }
+
         expect(response).to render_template :new
       end
     end
@@ -93,18 +96,21 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
         patch :update, params: { id: question, question: attributes_for(:question) }
+        
         expect(assigns(:question)).to eq question
       end
       
       it 'change question attributes' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
         question.reload
+        
         expect(question.title).to eq 'new title'
         expect(question.body).to eq 'new body'
       end
 
       it 'redirectto update question' do
         patch :update, params: { id: question, question: attributes_for(:question) }
+        
         expect(response).to redirect_to question
       end
     end
@@ -114,6 +120,7 @@ RSpec.describe QuestionsController, type: :controller do
       
       it 'does not change question' do
         question.reload
+        
         expect(question.title).to have_text 'MyString'
         expect(question.body).to eq 'MyText'
       end
@@ -126,9 +133,9 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'DELETE #destroy' do
     before { login(user) }
-    let!(:question) { create :question, user_id: user.id }
+    let!(:question) { create :question, user: user }
     let!(:invalid_user) { create(:user) }
-    let!(:invalid_question) { create :question, user_id: invalid_user.id }
+    let!(:invalid_question) { create :question, user: invalid_user }
     
     it 'delete the question if user author' do
       expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
@@ -140,6 +147,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'redirect_to index view' do
       delete :destroy, params: { id: question }
+
       expect(response).to redirect_to questions_path
     end
   end

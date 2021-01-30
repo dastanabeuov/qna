@@ -3,9 +3,9 @@ hr
   p.text-success The best answer
 
 h3 = answer.body
-p = render 'shared/files', resource: answer
-p = render 'shared/links', resource: answer
-p = render 'shared/voting', resource: answer
+p = render 'attachments/attachment', resource: answer
+p = render 'links/links', resource: answer
+p = render 'votes/voting', voteable: answer
 - if current_user && current_user.author_of?(answer)
   .btn-group
     = link_to (octicon 'pencil', height: 18), '#', class: 'edit-answer-link', data: { answer_id: answer.id }
@@ -22,14 +22,14 @@ p = render 'shared/voting', resource: answer
       = f.label :body
       = f.text_area :body, class: 'form-control'
     .form-group
-      = f.label :files 
+      = f.label :attachments 
       br/
-      = f.file_field :files, multiple: true, direct_upload: true, id: :answer_file
+      = f.file_field :attachments, multiple: true, direct_upload: true
     .form-group
       = f.fields_for :links do |l|
-        = render 'shared/link_fields', f: l
+        = render 'links/link_fields', f: l
     .form-group
-      = link_to_add_association octicon(:plus), f, :links, partial: 'shared/link_fields', title: "Add link"            
+      = link_to_add_association octicon(:plus), f, :links, partial: 'links/link_fields', title: "Add link"            
     = f.submit 'Save', class: 'btn btn-sm btn-outline-primary save'
   
 .comments

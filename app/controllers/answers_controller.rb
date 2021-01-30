@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  include Voting
+  include Votes
 
   before_action :authenticate_user!, only: %i[new create]
   before_action :set_question, only: %i[create]
@@ -47,8 +47,8 @@ class AnswersController < ApplicationController
     ActionCable.server.broadcast "answers-for-question-#{@answer.question_id}", 
       {
         answer: @answer,
-        attachments:  @answer.files,
-        rating: @answer.vote_count,
+        attachments:  @answer.attachments,
+        rating: @answer.voting,
         question_author: @answer.question.user_id
       }
   end
@@ -62,7 +62,7 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, files: [], 
+    params.require(:answer).permit(:body, attachments: [], 
       links_attributes: [:id, :name, :url, :_destroy])
   end
 end

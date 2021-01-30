@@ -1,59 +1,73 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let!(:user) { create(:user) }
-  let(:non_author) { create(:user) }
+  let(:user) { create(:user) }
+  let(:user2) { create(:user) }
   let(:question) { create :question, user_id: user.id }
-  let(:answer) { create :answer, question: question, user_id: user.id }
+  let(:answer) { create :answer, question: question, user: user }
 
-  before { sign_in(user) }
+  before { login(user) }
 
   describe 'POST #create' do
-    context 'with valid atributes' do
-      it 'connection with the logged in user' do
-        post :create, params: { question_id: question, user_id: user.id, answer: attributes_for(:answer), format: :js }
+    context 'valid attributes' do
+      it 'authenticated user can create' do
+        post :create, params: { question: question, user: user, answer: attributes_for(:answer), format: :js }
+        
         expect(assigns(:answer).user_id).to eq user.id
       end
 
-      it 'save a new answer in the database & the answer lies in the question' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js } }.to change(question.answers, :count).by(1)
+      it 'can save new answer in the database & the answer lies in the question' do
+        count = question.answers.count
+        post :create, params: { question: question, answer: attributes_for(:answer), format: :js }
+        
+        expect(question.answers.count).to eq count + 1
       end
 
       it 'redirectto show view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
+        post :create, params: { question: question, answer: attributes_for(:answer), format: :js }
 
-        expect(response).to render_template :create
+        expect(response).to render_template :show
       end
     end
 
-    context 'with invalid atributes' do
+    context 'invalid attributes' do
       it 'not save a answer in the database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid_ans), format: :js } }.to_not change(Answer, :count)
+        count = question.answers.count
+        post :create, params: { question: question, answer: attributes_for(:answer, :invalid), format: :js }
+      
+        expect(question.answers.count).to eq count
       end
 
-      it 'redirectto new view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid_ans), format: :js }
+      it 'redirect to new view' do
+        post :create, params: { question: question, answer: attributes_for(:answer, :invalid), format: :js }
 
-        expect(response).to render_template :create
+        expect(response).to render_template :new
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    let!(:answer) { create :answer, question: question, user_id: user.id }
+    let!(:answer) { create :answer, question: question, user: user }
     let!(:invalid_user) { create(:user) }
-    let!(:invalid_answer) { create :answer, question: question, user_id: invalid_user.id  }
+    let!(:invalid_answer) { create :answer, question: question, user: invalid_user  }
 
     it 'deletes the question if login and author current user' do
-      expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+      count = Answer.count
+      delete :destroy, params: { id: answer }
+
+      expect(Answer.count).to eq count - 1
     end
 
     it 'deletes the question if current user is not author answer' do
-      expect { delete :destroy, params: { id: invalid_answer } }.to_not change(Answer, :count)
+      count = Answer.count
+      delete :destroy, params: { id: invalid_answer }
+      
+      expect(Answer.count).to eq count
     end
 
-    it 'redirect to index' do
+    it 'redirect to show page question' do
       delete :destroy, params: { id: answer }
+
       expect(response).to redirect_to question_path(question)
     end
   end
@@ -64,6 +78,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'assigns the requested answer to @answer' do
         patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+
         expect(assigns(:answer)).to eq answer
       end
 
@@ -71,11 +86,13 @@ RSpec.describe AnswersController, type: :controller do
         it 'changes the answer attributes' do
           patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js }
           answer.reload
+
           expect(answer.body).to eq 'new body'
         end
 
         it 'renders update template' do
           patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+
           expect(response).to render_template :update
         end
       end
@@ -109,6 +126,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'render "update" template' do
         patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+
         expect(response).to render_template :update
       end
     end
@@ -139,6 +157,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'changes needed answer attributes' do
         patch :correct_best, params: { id: answer, format: :js }
         answer.reload
+
         expect(answer).to be_best
       end
 
@@ -146,11 +165,13 @@ RSpec.describe AnswersController, type: :controller do
         other_answer = create(:answer, question: question, best: true)
         patch :correct_best, params: { id: answer, format: :js }
         other_answer.reload
+
         expect(other_answer).to_not be_best
       end
 
       it 'renders correct_best template' do
         patch :correct_best, params: { id: answer, format: :js }
+
         expect(response).to render_template :correct_best
       end
     end
@@ -161,11 +182,13 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not change best status of the answer' do
         patch :correct_best, params: { id: other_answer, format: :js }
         answer.reload
+
         expect(answer).to_not be_best
       end
 
       it 'have http status Forbidden' do
         patch :correct_best, params: { id: answer, format: :js }
+
         expect(response).to have_http_status(403)
       end
     end
@@ -174,14 +197,15 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not change best status of the answer' do
         patch :correct_best, params: { id: other_answer, format: :js }
         answer.reload
+
         expect(answer).to_not be_best
       end
 
       it 'returns unauthorized 401 status code' do
         patch :correct_best, params: { id: answer, format: :js }
+
         expect(response).to have_http_status(401)
       end
     end
-  end    
-
+  end
 end

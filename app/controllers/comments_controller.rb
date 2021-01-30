@@ -2,13 +2,15 @@ class CommentsController < ApplicationController
   after_action :publish_comment, only: [:create]
 
   def create
-    @comment = @commentable.comments.new comment_params
+    @comment = @commentable.comments.new(comment_params)
     @comment.user = current_user
     @comment.save
     if @commentable.is_a?(Answer)
-      redirect_to @commentable.question, notice: "Your comment posted!"
+      redirect_to @commentable.question
+      flash[:notice] = "Your Answer comment posted!"
     else
-      redirect_to @commentable, notice: 'Your comment posted!'
+      redirect_to @commentable
+      flash[:notice] = 'Your Question comment posted!'
     end
   end
 

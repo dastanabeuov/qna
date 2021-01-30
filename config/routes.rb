@@ -1,21 +1,28 @@
 Rails.application.routes.draw do
-  devise_for :users
   root to: "questions#index"
+
+  devise_for :users
+
+  concern :attachable do
+    resources :attachments, shallow: true, only: %i[destroy]
+  end
+
+  concern :voteable do
+    post :like, :dislike, on: :member
+  end
   
   resources :questions do
-    patch :like, on: :member
-    patch :dislike, on: :member    
+    concerns :attachable
+    concerns :voteable
     resources :comments, module: :questions
-
     resources :answers, shallow: true do 
-      patch :set_best, on: :member
-      patch :like, on: :member
-      patch :dislike, on: :member
+      concerns :attachable
+      concerns :voteable
       resources :comments, module: :answers
+      patch :set_best, on: :member
     end
   end
 
-  resources :attachments, only: :destroy
   resources :links, only: :destroy
   resources :awards, only: :index
 

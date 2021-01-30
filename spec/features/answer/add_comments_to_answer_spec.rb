@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-feature 'Add comments to answer', %q{
-  In order to share opinion
-  As an authnticated user
-  i'd like to be able to add comments
+feature 'CREATE COMMENT', %q{
+  Authenticated user create
+  Authnticated user create with errors
+  Unauthnticated user try create comment
 } do
   
   given(:user) { create(:user) }
@@ -11,39 +11,35 @@ feature 'Add comments to answer', %q{
   given(:question) { create(:question) }
   given!(:answer) { create(:answer, question: question) }
 
-  describe 'As authenticated user' do
-    before do
-      sign_in(user)
-      visit question_path(question)
+  before do
+    sign_in(user)
+    visit question_path(question)
+  end
+
+  scenario 'Authenticated user create', js: true do
+    within '.answer-comment-form' do
+      fill_in 'Text',	with: 'MyText' 
+      click_on 'Save comment'
     end
 
-    scenario 'add comment with valid attributes', js: true do
-      within '.answer-comment-form' do
-        fill_in 'Text',	with: 'Comment body' 
-        click_on 'Save comment'
-      end
-
-      within ".answer-#{answer.id}-comments-list" do
-        expect(page).to have_content 'Comment body'
-      end
-    end
-
-    scenario 'add comment with invalid attributes', js: true do
-      within '.answer-comment-form' do
-        click_on 'Save comment'
-      end
-
-      within ".answer-#{answer.id}-comments-list" do
-        expect(page).to_not have_selector "li"
-      end
+    within ".answer-#{answer.id}-comments-list" do
+      expect(page).to have_content 'MyText'
     end
   end
 
-  describe 'As un-authenticated user' do
-    scenario 'wants add comment', js: true do
-      visit question_path(question)
-
-      expect(page).to have_content 'You need to sign in or sign up before continuing.'
+  scenario 'authnticated user create with errors', js: true do
+    within '.answer-comment-form' do
+      click_on 'Save comment'
     end
+
+    within ".answer-#{answer.id}-comments-list" do
+      expect(page).to_not have_selector "li"
+    end
+  end
+
+  scenario 'unauthnticated user try create comment', js: true do
+    visit question_path(question)
+
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 end

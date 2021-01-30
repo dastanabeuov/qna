@@ -13,8 +13,8 @@ html
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
 
   body
-    = render 'shared/header'
+    = render 'layouts/header'
     .container
       = render 'shared/flash'  
       = yield
-    = render 'shared/footer'  
+    = render 'layouts/footer'  
