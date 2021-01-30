@@ -1,17 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe "Associations" do
-    it { should have_many(:questions) }
-    it { should have_many(:answers) }
-  end
+  it { should have_many(:questions) }
+  it { should have_many(:answers) }
+  it { should have_many(:awards) }
+  it { should have_many(:votes) }
+  it { should have_many(:comments) }
 
-  describe "Validation" do
-    it { should validate_presence_of(:email) }
-    it { should validate_presence_of(:password) }
-  end
-
-  describe "Methods" do
+  describe 'method "author_of?":' do
     let(:user) { create(:user) }
 
     it "valid author" do
@@ -24,6 +20,5 @@ RSpec.describe User, type: :model do
       question = create(:question, user_id: user.id )
       expect(invalid_user).to_not be_author_of(question)
     end
-  end   
-
+  end
 end

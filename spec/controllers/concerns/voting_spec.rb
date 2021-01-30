@@ -1,46 +1,54 @@
 require 'rails_helper'
 
 shared_examples "Like or Dislike QnA" do
-  let (:author_of_qna)     { create(:user) }
-  let (:votable_question) { create(:question, user: author_of_qna) }
-  let (:votable_answer)   { create(:answer, question: votable_question, user: author_of_qna)}
-  
-  describe 'PATCH #Like' do
-    sign_in_user
+  let (:user) { create(:user) }
+  let (:user2) { create(:user) }
+  let (:user3) { create(:user) }
+  let (:question) { create(:question, user: user) }
+  let (:answer) { create(:answer, user: user, question: question) } 
 
-    it "creates new like" do
-      patch :like, params: { id: question, format: :json }
-      patch :like, params: { question_id: votable_question, id: votable_answer, format: :json }
-      votable_question.reload
-      votable_answer.reload
-      expect(votable_question.votes.first.value).to eq 1
-      expect(votable_answer.votes.first.value).to eq 1
+  describe 'PATCH #Like' do
+    login(user2)
+
+    it "change like +1" do
+      patch :like, params: { id: question, value: 1, votable_id: question.id, votable_type: question.class.name, user_id: user2 format: :json }
+      patch :like, params: { id: answer, value: 1, votable_id: answer.id, votable_type: answer.class.name, user_id: user2 format: :json }
+
+      question.reload
+      answer.reload
+      
+      expect(question.votes.first.value).to eq 1
+      expect(answer.votes.first.value).to eq 1
     end
   end
 
   describe 'PATCH #Dislike' do
-    sign_in_user
+    login(user3)
 
-    it "creates new dislike" do 
-      patch :dislike, params: { id: voteble_question, format: :json }
-      patch :dislike, params: { question_id: votable_question, id: votable_answer, format: :json }
-      votable_question.reload
-      votable_answer.reload
-      expect(votable_question.votes.first.value).to eq -1
-      expect(votable_answer.votes.first.value).to eq -1
+    it "change dislike -1" do 
+      patch :dislike, params: { id: question, value: 1, votable_id: question.id, votable_type: question.class.name, user_id: user2 format: :json }
+      patch :dislike, params: { id: answer, value: 1, votable_id: answer.id, votable_type: answer.class.name, user_id: user2 format: :json }
+
+      question.reload
+      answer.reload
+      
+      expect(question.votes.first.value).to eq 1
+      expect(answer.votes.first.value).to eq 1
     end
   end
 
   describe 'PATCH #cancel_votes' do
-    sign_in_user
+    login(user)
 
-    it "changes value" do 
-      patch :cancel_votes, params: { id: votable_question, format: :json }
-      patch :cancel_votes, params: { question_id: votable_question, id: votable_answer, format: :json }
-      votable_question.reload
-      votable_answer.reload
-      expect(votable_question.votes.first).to eq nil
-      expect(votable_question.votes.first).to eq nil
+    it "changes cancel value (like + dislike)" do 
+      patch :dislike, params: { id: question, value: 1, votable_id: question.id, votable_type: question.class.name, user_id: user2 format: :json }
+      patch :dislike, params: { id: answer, value: 1, votable_id: answer.id, votable_type: answer.class.name, user_id: user2 format: :json }
+
+      question.reload
+      answer.reload
+      
+      expect(question.votes.first.value).to eq nil
+      expect(answer.votes.first.value).to eq nil
     end
   end
 end

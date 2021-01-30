@@ -2,14 +2,14 @@ require 'rails_helper'
 
 RSpec.describe AwardsController, type: :controller do
   describe 'GET #index' do
-    let(:user) { create(:user) }
-    let!(:question_one) { create(:question, author: user) }
-    let!(:question_two) { create(:question, author: user) }
-    let!(:award_one) { create(:award, question: question_one, recipient: user) }
-    let!(:award_two) { create(:award, question: question_two, recipient: user) }
+    let!(:user) { create(:user) }
+    let!(:question1) { create(:question, user: user) }
+    let!(:question2) { create(:question, user: user) }
+    let!(:award1) { create(:award, question: question1, recipient: user) }
+    let!(:award1) { create(:award, question: question2, recipient: user) }
 
     before do
-      log_in(user)
+      login(user)
       get :index
     end
 

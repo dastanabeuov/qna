@@ -1,3 +1,7 @@
-= image_tag url_for(award.image)
-= award.title
-= link_to award.question.title, question_path(award.question)
+- if resource.award.present?
+	p Award:
+	= octicon :gift, height: 18
+	br
+	= image_tag url_for(resource.award.image)
+	br
+	= resource.award.title

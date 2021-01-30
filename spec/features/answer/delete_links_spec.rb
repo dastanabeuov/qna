@@ -1,47 +1,43 @@
 require 'rails_helper'
 
-feature 'User can delete answer links', %q{
-  In order to remove unneeded information
-  As an authenticated user and answer's user
-  I'd like to be able to delete links attached to my answer
+feature 'DELETE LINK', %q{
+  Authenticated user delete answer link
+  Other authenticated user's try delete answer link
+  Unauthenticated user tries delete answer link
 } do
 
-  given(:users) { create_list(:user, 2) }
-  given!(:question) { create(:question, user_id: users.first.id) }
-  given!(:answer) { create(:answer, question: question, user_id: users.first.id) }
+  given(:users) { (:user) }
+  given(:users2) { (:user) }
+  given!(:question) { create(:question, user: user) }
+  given!(:answer) { create(:answer, question: question, user: user) }
   given!(:link) { create(:link, linkable: answer) }
 
-  describe 'Authenticated user' do
-    scenario 'tries to delete link on their own answer', js: true do
-      sign_in(users.first)
-      visit questions_path
-      click_on question.title
+  scenario 'Authenticated user delete answer link' do
+    sign_in(user)
+    visit questions_path(question)
 
-      within '.answers .links' do
-        click_on 'Remove'
-      end
-
-      # Accept pop-up alert
-      #page.driver.browser.switch_to.alert.accept
-
-      expect(page).to have_content answer.body
-      expect(page).to_not have_link 'Google', href: 'https://google.com'
+    within '.answers .links' do
+      click_on 'Remove'
     end
 
-    scenario "tries to delete link on other user's answer", js: true do
-      sign_in(users.last)
-      visit questions_path
-      click_on question.title
+    # Accept pop-up alert
+    # page.driver.browser.switch_to.alert.accept
 
-      within '.answers .links' do
-        expect(page).to_not have_link 'Remove'
-      end
+    expect(page).to have_content answer.body
+    expect(page).to_not have_link 'Google', href: 'https://google.com'
+  end
+
+  scenario "Other authenticated user's try delete answer link" do
+    sign_in(users.last)
+    visit question_path(question)
+
+    within '.answers .links' do
+      expect(page).to_not have_link 'Remove'
     end
   end
 
-  scenario 'Unauthenticated user tries to delete link on any answer', js: true do
-    visit questions_path
-    click_on question.title
+  scenario 'Unauthenticated user tries delete answer link' do
+    visit question_path(question)
 
     within '.answers .links' do
       expect(page).to_not have_link 'Delete'

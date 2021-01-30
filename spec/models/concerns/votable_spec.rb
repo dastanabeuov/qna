@@ -1,28 +1,28 @@
 require 'rails_helper'
 
 RSpec.describe Vote, type: :model do
+  it { should belong_to :user }
+  it { should belong_to :votable }
+
   it { should validate_presence_of :user_id }
   it { should validate_inclusion_of(:votable_type).in_array ['Question', 'Answer'] }
   it { should validate_inclusion_of(:value).in_array [-1, 1] }
 
-  it { should belong_to :user }
-  it { should belong_to :votable }
-
   let(:user) { create(:user) }
   let(:user2) { create(:user) }
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question) }
+  let(:question) { create(:question, user: user) }
+  let(:answer) { create(:answer, question: question, user: user) }
 
   [:question, :answer].each do |votable_name|
     before { @votable = send votable_name }
 
     describe "vote for #{ votable_name }" do
-      it 'like by user' do
+      it 'like' do
         expect { @votable.vote user, 1 }.to change(@votable.votes, :count).by(1)
         expect(@votable.voted_by? user).to be true
       end
 
-      it 'dislike by user' do
+      it 'dislike' do
         expect { @votable.vote user, -1 }.to change(@votable.votes, :count).by(1)
         expect(@votable.voted_by? user).to be true
       end

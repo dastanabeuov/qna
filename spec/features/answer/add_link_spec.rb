@@ -1,62 +1,63 @@
 require 'rails_helper'
 
-feature 'User can add links answer from question', %q{
-  In order to provide additional info to my question
-  As question's author
-  I'd like to be able to add links
+feature 'CREATE LINK', %q{
+  Authenticated user create link
+  Authenticated user create with errors link
+  Unauthenticated user create link
+  Authenticated user create link to Github(Gist)
 } do
+
   given(:user) { create(:user) }
-  given(:question) { create(:question) }
+  given(:question) { create(:question, user: user) }
   given(:google_url) { 'https://google.com/' }
+  given(:invalid_url) { 'htt://google.com/' }
 
-  background do
+  scenario 'Authenticated user create link', js: true do
     sign_in(user)
-    visit question_path(question)
-  end
+    visit edit_question_path(question)
 
-  describe 'User adds a regular link when asking a question' do
-    scenario 'it is a vallid link', js: true do
-      fill_in 'body', with: 'body text...'
+    click_on 'Add link'
 
-      within all('#links .nested-fields').last do
-        fill_in 'name', with: 'Google'
-        fill_in 'url', with: google_url
-      end
-
-      click_on 'Add link'
-
-      within all('#links .nested-fields').last do
-        fill_in 'name', with: 'Google'
-        fill_in 'url', with: google_url
-      end
-
-      click_on 'Save'
-
-      expect(page).to have_link 'Google', href: google_url
-      expect(page).to have_link 'Google', href: google_url
+    within all('#links .nested-fields').last do
+      fill_in 'name', with: 'Google'
+      fill_in 'url', with: google_url
     end
 
-    scenario 'it is an invalid link', js: true do
-      fill_in 'body', with: 'body text...'
+    click_on 'Save'
 
-      within all('#links .nested-fields').last do
-        fill_in 'name', with: 'Google'
-        fill_in 'url', with: 'invalid link'
-      end
-
-      click_on 'Save'
-
-      expect(page).to have_content 'Links url is not a valid url'
-      expect(page).to_not have_link 'Google', href: 'invalid link'
-   end
+    expect(page).to have_link 'Google', href: google_url
   end
 
-  describe 'User adds a link to Github Gist when asking a question' do
-    given(:gist_url) { 'https://gist.github.com/dastanabeuov/2315ed37f2ce1dd86456ad6c836eff8c' }
-    given(:invalid_gist_url) { 'https://gist.github.com/dastanabeuov/empty' }
+  scenario 'Authenticated user create with errors link', js: true do
+    sign_in(user)
+    visit edit_question_path(question)
 
-    scenario 'it is a valid Gist link', js: true do
-      fill_in 'body', with: 'body text...'
+    click_on 'Add link'
+
+    within all('#links .nested-fields').last do
+      fill_in 'name', with: 'Google'
+      fill_in 'url', with: invalid_url
+    end
+
+    click_on 'Save'
+
+    expect(page).to have_content 'Links url is not a valid url'
+    expect(page).to_not have_link 'Google', href: invalid_url
+  end
+
+  scenario 'Unauthenticated user create link', js: true do
+    visit edit_question_path(question)
+
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+  end
+
+  scenario 'Authenticated user create link to Github(Gist)' do
+    context 'valid attributes' do
+      given(:gist_url) { 'https://gist.github.com/dastanabeuov/2315ed37f2ce1dd86456ad6c836eff8c' }
+      sign_in(user)
+      visit edit_question_path(question)
+
+      click_on 'Add link'
 
       within all('#links .nested-fields').last do
         fill_in 'name', with: 'RVM & Rails setup'
@@ -70,8 +71,12 @@ feature 'User can add links answer from question', %q{
       expect(page).to have_link 'RVM & Rails setup', href: gist_url
     end
 
-    scenario 'it is an invalid Gist link', js: true do
-      fill_in 'body', with: 'body text...'
+    context 'invalid attributes' do
+      given(:invalid_gist_url) { 'https://gist.github.com/dastanabeuov/empty' }
+      sign_in(user)
+      visit edit_question_path(question)
+
+      click_on 'Add link'
 
       within all('#links .nested-fields').last do
         fill_in 'name', with: 'Invalid Gist'

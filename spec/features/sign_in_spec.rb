@@ -1,12 +1,10 @@
 require 'rails_helper'
 
 feature 'User can signin', %q{
-  In order to ask question
-  As an unauthenticate User
-  I'd like to be able to sign in
-  User sign in system
-  User log out system
-  User register in system
+  Registration user tries sign in
+  Unregistered user tries sign in
+  User can logout system
+  User can register on system
 } do
   given(:user) { create(:user) }
   
@@ -16,6 +14,7 @@ feature 'User can signin', %q{
     fill_in 'Email', with: user.email
     fill_in 'Password', with: user.password
     click_on 'Log in'
+
     expect(page).to have_content 'Signed in successfully.'
   end
 
@@ -23,6 +22,7 @@ feature 'User can signin', %q{
     fill_in 'Email', with: 'wrong@test.com'
     fill_in 'Password', with: '12345678'
     click_on 'Log in'
+    
     expect(page).to have_content 'Invalid Email or password.'
   end
 
@@ -32,6 +32,7 @@ feature 'User can signin', %q{
     click_on 'Log in'
     visit questions_path
     click_on 'Logout'
+    
     expect(page).to have_content 'Signed out successfully.'
   end
 
@@ -41,6 +42,7 @@ feature 'User can signin', %q{
     fill_in 'Password', with: '12345678'
     fill_in 'Password confirmation', with: '12345678'
     click_on 'Sign up'
+    
     expect(page).to have_content 'Welcome! You have signed up successfully.'
   end
 end

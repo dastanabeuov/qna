@@ -1,12 +1,16 @@
 require 'rails_helper'
 
-feature 'User can add links question from question', %q{
-  In order to provide additional info to my question
-  As question's author
-  I'd like to be able to add links
+feature 'ADD LINK QUESTION', %q{
+  authenticate user add vallid attributes
+  Authenticate user add invallid attributes
+  Authenticate user add valid_gist_url attributes
+  Authenticate user add invallid_gist_url attributes
 } do
+
   given(:user) { create(:user) }
   given(:google_url) { 'https://google.com/' }
+  given(:gist_url) { 'https://gist.github.com/dastanabeuov/2315ed37f2ce1dd86456ad6c836eff8c' }
+  given(:invalid_gist_url) { 'https://gist.github.com/dastanabeuov/empty' }
 
   background do
     sign_in(user)
@@ -14,81 +18,73 @@ feature 'User can add links question from question', %q{
     click_on 'Ask questions'
   end
 
-  describe 'User adds a regular link when asking a question' do
-    scenario 'it is a vallid link', js: true do
-      fill_in 'Title', with: 'Title text...'
-      fill_in 'Body', with: 'Body text...'
+  scenario 'Authenticate user add vallid attributes', js: true do
+    fill_in 'Title', with: 'MyString'
+    fill_in 'Body', with: 'MyText'
 
-      within all('#links .nested-fields').last do
-        fill_in 'name', with: 'Google'
-        fill_in 'url', with: google_url
-      end
-
-      click_on 'Add link'
-
-      within all('#links .nested-fields').last do
-        fill_in 'name', with: 'Google'
-        fill_in 'url', with: google_url
-      end
-
-      click_on 'Save question'
-
-      expect(page).to have_link 'Google', href: google_url
-      expect(page).to have_link 'Google', href: google_url
+    within all('#links .nested-fields').last do
+      fill_in 'name', with: 'Google'
+      fill_in 'url', with: google_url
     end
 
-    scenario 'it is an invalid link', js: true do
-      fill_in 'Title', with: 'Title text...'
-      fill_in 'Body', with: 'Body text...'
+    click_on 'Add link'
 
-      within all('#links .nested-fields').last do
-        fill_in 'name', with: 'Google'
-        fill_in 'url', with: 'invalid link'
-      end
-
-      click_on 'Save question'
-
-      expect(page).to have_content 'Links url is not a valid url'
-      expect(page).to_not have_link 'Google', href: 'invalid link'
-      expect(page).to_not have_content 'Your question successfully created.'
+    within all('#links .nested-fields').last do
+      fill_in 'name', with: 'Google'
+      fill_in 'url', with: google_url
     end
+
+    click_on 'Save question'
+
+    expect(page).to have_link 'Google', href: google_url
+    expect(page).to have_link 'Google', href: google_url
   end
 
-  describe 'User adds a link to Github Gist when asking a question' do
-    given(:gist_url) { 'https://gist.github.com/dastanabeuov/2315ed37f2ce1dd86456ad6c836eff8c' }
-    given(:invalid_gist_url) { 'https://gist.github.com/dastanabeuov/empty' }
+  scenario 'Authenticate user add invallid attributes', js: true do
+    fill_in 'Title', with: 'MyString'
+    fill_in 'Body', with: 'MyText'
 
-    scenario 'it is a valid Gist link', js: true do
-      fill_in 'Title', with: 'Title text...'
-      fill_in 'Body', with: 'Body text...'
-
-      within all('#links .nested-fields').last do
-        fill_in 'name', with: 'RVM & Rails setup'
-        fill_in 'url', with: gist_url
-      end
-
-      click_on 'Save question'
-
-      wait_for_ajax
-      expect(page).to have_content 'RVM & Rails setup'
-      expect(page).to have_link 'RVM & Rails setup', href: gist_url
+    within all('#links .nested-fields').last do
+      fill_in 'name', with: 'Google'
+      fill_in 'url', with: invalid_link
     end
 
-    scenario 'it is an invalid Gist link', js: true do
-      fill_in 'Title', with: 'Title text...'
-      fill_in 'Body', with: 'Body text...'
+    click_on 'Save question'
 
-      within all('#links .nested-fields').last do
-        fill_in 'name', with: 'Invalid Gist'
-        fill_in 'url', with: invalid_gist_url
-      end
+    expect(page).to have_content 'Links url is not a valid url'
+    expect(page).to_not have_link 'Google', href: invalid_link
+  end
 
-      click_on 'Save question'
+  scenario 'Authenticate user add valid_gist_url attributes', js: true do
+    fill_in 'Title', with: 'MyString'
+    fill_in 'Body', with: 'MyText'
 
-      wait_for_ajax
-      expect(page).to have_content 'Your Gist has not been created!'
-      expect(page).to have_link 'Invalid Gist', href: invalid_gist_url
+    within all('#links .nested-fields').last do
+      fill_in 'name', with: 'RVM & Rails setup'
+      fill_in 'url', with: gist_url
     end
+
+    click_on 'Save question'
+
+    wait_for_ajax
+    expect(page).to have_content 'RVM & Rails setup'
+    expect(page).to have_link 'RVM & Rails setup', href: gist_url
+  end
+
+  scenario 'Authenticate user add invallid_gist_url attributes', js: true do
+    fill_in 'Title', with: 'MyString'
+    fill_in 'Body', with: 'MyText'
+
+    within all('#links .nested-fields').last do
+      fill_in 'name', with: 'Invalid Gist'
+      fill_in 'url', with: invalid_gist_url
+    end
+
+    click_on 'Save question'
+
+    wait_for_ajax
+    expect(page).to have_content 'Your Gist has not been created!'
+    expect(page).to have_link 'Invalid Gist', href: invalid_gist_url
   end
 end
 

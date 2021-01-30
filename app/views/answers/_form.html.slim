@@ -5,13 +5,13 @@
     = f.label :body, 'Body'
     = f.text_area :body, id: :answer_body, class: "form-control"
   .form-group
-    = f.label :files
+    = f.label :attachments
     br
-    = f.file_field :files, multiple: true, direct_upload: true, id: :answer_file, direct_upload: true
+    = f.file_field :attachments, multiple: true
   .form-group
     = f.fields_for :links do |l|
-      = render 'shared/link_fields', f: l
+      = render 'links/link_fields', f: l
   .form-group
-    = link_to_add_association octicon(:plus), f, :links, partial: 'shared/link_fields', title: "Add link"
+    = link_to_add_association octicon(:plus), f, :links, partial: 'links/link_fields', title: "Add link"
 
   = f.submit 'Answer on question', class: "btn btn-outline-primary mt-2"

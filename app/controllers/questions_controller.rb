@@ -1,8 +1,9 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show edit update destroy]
+  include Votes
 
-  include Voting
+  before_action :authenticate_user!, only: %i[new create show]
+  before_action :load_question, only: %i[show edit update destroy]
+  after_action :publish_question, only: [:create]
 
   def index
     @questions = Question.all
@@ -62,8 +63,20 @@ class QuestionsController < ApplicationController
     @question ||= Question.find(params[:id])
   end
 
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast(
+      'questions-list',
+      ApplicationController.render(
+        partial: 'questions/question_item',
+        locals: { question: @question }, layout: false
+      )
+    )
+  end
+
   def question_params
-    params.require(:question).permit(:title, :body, files: [],
+    params.require(:question).permit(:title, :body, 
+      attachments: [],
       links_attributes: [:id, :name, :url, :_destroy],
       award_attributes: [:id, :title, :image, :_destroy])
   end

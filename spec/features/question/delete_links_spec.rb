@@ -1,45 +1,44 @@
 require 'rails_helper'
 
-feature 'User can delete question links', %q{
-  In order to remove unneeded information
-  As an authenticated user and questions's author
-  I'd like to be able to delete links attached to my question
+feature 'DELETE QUESTION', %q{
+  Authenticated owner user delete link question
+  Authenticated other user delete link question
+  Unauthenticated user delete link question
 } do
 
-  given(:users) { create_list(:user, 2) }
-  given!(:question) { create(:question, author_id: users.first.id) }
-  given!(:link) { create(:link, linkable: question) }
+  given(:user) { create(:user) }
+  given(:user2) { create(:user) }
+  given(:question) { create(:question, author: user) }
+  given(:link) { create(:link, linkable: question) }
 
-  describe 'Authenticated user' do
-    scenario 'tries to delete link on their own question', js: true do
-      sign_in(users.first)
-      visit questions_path
-      click_on question.title
+  scenario 'Authenticated owner user delete link question', js: true do
+    sign_in(users.first)
+    visit questions_path
+    click_on question.title
 
-      within '.question .links' do
-        click_on 'Remove'
-      end
-
-      # Accept pop-up alert
-      #page.driver.browser.switch_to.alert.accept
-
-      expect(page).to have_content question.title
-      expect(page).to have_content question.body
-      expect(page).to_not have_link 'Google', href: 'https://google.com'
+    within '.question .links' do
+      click_on 'Remove'
     end
 
-    scenario "tries to delete link on other user's question", js: true do
-      sign_in(users.last)
-      visit questions_path
-      click_on question.title
+    # Accept pop-up alert
+    #page.driver.browser.switch_to.alert.accept
 
-      within '.question .links' do
-        expect(page).to_not have_selector 'Remove'
-      end
+    expect(page).to have_content question.title
+    expect(page).to have_content question.body
+    expect(page).to_not have_link 'Google', href: 'https://google.com'
+  end
+
+  scenario "Authenticated other user delete link question", js: true do
+    sign_in(users.last)
+    visit questions_path
+    click_on question.title
+
+    within '.question .links' do
+      expect(page).to_not have_selector 'Remove'
     end
   end
 
-  scenario 'Unauthenticated user tries to delete link on any question', js: true do
+  scenario 'Unauthenticated user delete link question', js: true do
     visit questions_path
     click_on question.title
 

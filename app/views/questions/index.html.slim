@@ -1,7 +1,10 @@
-- @questions.each do |q|
-  = link_to q.title, q
+h3 Questions
+.questions-list
+  - if @questions.any?
+    - @questions.each do |question|
+      = render 'question_item', question: question
+  - else
+    p No questions found(
 
 hr
-br
-
 = link_to (octicon "plus", height: 18), new_question_path
