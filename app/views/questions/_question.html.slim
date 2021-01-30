@@ -1,45 +1,47 @@
-h1 = question.title
-p = question.body
-p = render 'attachments/attachment', resource: question
-p = render 'links/links', resource: question
-p = render 'awards/award', resource: question
-p = render 'votes/voting', voteable: question
-- if current_user && current_user.author_of?(question)
-  = link_to (octicon "pencil", height: 18), edit_question_path(question), data: { question_id: question.id }, class: 'edit-question-link'
-  = link_to (octicon "trash", height: 18), question_path(question), 
-    method: :delete, data: { confirm: 'Are your sure delete?' }
+.question-errors-#{question.id}
+.question-#{question.id}
+  h1 = question.title
+  p = question.body
+  p = render 'attachments/attachments', resource: question
+  p = render 'links/links', resource: question
+  p = render 'awards/award', resource: question
+  p = render 'votes/voting', voteable: question
+  - if current_user && current_user.author_of?(question)
+    = link_to (octicon "pencil", height: 18), edit_question_path(question), data: { question_id: question.id }, class: 'edit-question-link'
+    = link_to (octicon "trash", height: 18), question_path(question), 
+      method: :delete, data: { confirm: 'Are your sure delete?' }
 
-= form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|  
-  .form-group
-    = render 'shared/errors', resource: question
-  .form-group
-    = f.label :title
-    = f.text_field :title, id: :question_title, class: "form-control"
-  .form-group
-      = f.label :body
-      = f.text_area :body, id: :question_body, class: "form-control"
-  .form-group
-    = f.label :attachments
-    br
-    = f.file_field :attachments, multiple: true
-  .form-group
-    = f.fields_for :links do |l|
-     = render 'links/link_fields', f: l
-  .form-group
-    = link_to_add_association octicon(:plus), f, :links, partial: 'links/link_fields', title: "Add link"
-  .form-group
-    = f.fields_for :award do |l|
-      .field
-        = l.label :title
-        br
-        = l.text_field :title, class: 'form-control'
-      .field
-        = l.label :image
-        br
-        = l.file_field :image, direct_upload: true
+  = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|  
+    .form-group
+      = render 'shared/errors', resource: question
+    .form-group
+      = f.label :title
+      = f.text_field :title, id: :question_title, class: "form-control"
+    .form-group
+        = f.label :body
+        = f.text_area :body, id: :question_body, class: "form-control"
+    .form-group
+      = f.label :attachments
+      br
+      = f.file_field :attachments, multiple: true
+    .form-group
+      = f.fields_for :links do |l|
+       = render 'links/link_fields', f: l
+    .form-group
+      = link_to_add_association octicon(:plus), f, :links, partial: 'links/link_fields', title: "Add link"
+    .form-group
+      = f.fields_for :award do |l|
+        .field
+          = l.label :title
+          br
+          = l.text_field :title, class: 'form-control'
+        .field
+          = l.label :image
+          br
+          = l.file_field :image, direct_upload: true
 
-  = f.submit 'Save question', class: "btn btn-outline-primary mt-2"
+    = f.submit 'Save question', class: "btn btn-outline-primary mt-2"
 
-.comments
-  = render "comments/comments", resource: question
-  = render "comments/form", resource: question
+  .comments
+    = render "comments/comments", resource: question
+    = render "comments/form", resource: question

@@ -14,13 +14,10 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answers ||= Answer.all
     if current_user.author_of?(@answer)
       @answer.update(answer_params)
       flash[:success] = 'Your answer has been update!'
-      @question = @answer.question
     else
-      redirect_to question_path(@question)
       flash[:error] = 'Your answer has not been update!'
     end
   end
@@ -32,7 +29,6 @@ class AnswersController < ApplicationController
     else
       flash[:notice] = 'Your answer has not been deleted.'
     end
-    redirect_to question_path(@answer.question)
   end 
 
   def set_best

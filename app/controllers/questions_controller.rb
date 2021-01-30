@@ -11,27 +11,20 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
-    @answer.links.new
   end
 
   def new
     @question = Question.new
-    @question.links.new
-    @question.build_award
   end  
 
   def edit
-    @question.links.new
-    @question.build_award
   end
 
   def update
     if current_user.author_of?(@question)
       @question.update(question_params)
-      redirect_to @question
       flash[:success] = 'Your question has been update!'
     else
-      render :edit
       flash[:error] = 'Your question has not been update!'
     end
   end
@@ -48,12 +41,12 @@ class QuestionsController < ApplicationController
 
   def create
     @question = current_user.questions.new(question_params)
-
     if @question.save
-      redirect_to @question, success: 'Your question successfully created.'
+      redirect_to @question
+      flash[:success] = 'Your question successfully created.'
     else
-      flash[:error] = 'Your question not created.'
       render :new
+      flash[:error] = 'Your question is not created.'
     end
   end
 
