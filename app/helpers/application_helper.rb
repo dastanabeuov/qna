@@ -1,10 +1,13 @@
 module ApplicationHelper
-  ALERTS = { notice: "alert alert-info", success: "alert alert-success", 
-             error: "alert alert-danger", alert: "alert alert-warning" }
-
-  def flash_class(key)
-    key.to_sym
-    ALERTS[key] || "alert alert-success"
+  def flash_key(key)
+  	key.to_s
+  	if key == 'notice'
+  		'success'
+  	elsif key == 'alert'
+  		'warning'
+  	else
+  		kay
+  	end	
   end
 
   def current_year

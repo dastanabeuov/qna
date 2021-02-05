@@ -24,8 +24,10 @@ class QuestionsController < ApplicationController
     if current_user.author_of?(@question)
       @question.update(question_params)
       flash[:success] = 'Your question has been update!'
+      redirect_to @question
     else
-      flash[:error] = 'Your question has not been update!'
+      redirect_to @question
+      flash[:danger] = 'Your question has not been update!'
     end
   end
 
@@ -33,10 +35,8 @@ class QuestionsController < ApplicationController
     if current_user.author_of?(@question)
       @question.destroy
       flash[:success] = "Your question has been deleted."
-    else 
-      flash[:error] = "Your question has not been deleted."
-    end
-    redirect_to questions_path
+      redirect_to questions_path
+    end   
   end
 
   def create
@@ -46,7 +46,7 @@ class QuestionsController < ApplicationController
       flash[:success] = 'Your question successfully created.'
     else
       render :new
-      flash[:error] = 'Your question is not created.'
+      flash[:danger] = 'Your question is not created.'
     end
   end
 

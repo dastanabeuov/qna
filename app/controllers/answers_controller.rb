@@ -10,25 +10,32 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
-    @answer.save
+    if @answer.save
+      redirect_to @question
+      flash[:success] = "Your answer has been created!"
+    else
+      redirect_to @question
+      flash[:danger] = "Your answer has not created!"
+    end
   end
 
   def update
     if current_user.author_of?(@answer)
       @answer.update(answer_params)
       flash[:success] = 'Your answer has been update!'
+      redirect_to @answer.question
     else
-      flash[:error] = 'Your answer has not been update!'
+      redirect_to @answer.question
+      flash[:danger] = 'Your answer has not been update!'
     end
   end
 
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      flash[:notice] = 'Your answer has been deleted.'
-    else
-      flash[:notice] = 'Your answer has not been deleted.'
-    end
+      redirect_to @answer.question
+      flash[:info] = 'Your answer has been deleted.'
+    end    
   end 
 
   def set_best
