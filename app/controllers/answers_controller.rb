@@ -6,6 +6,8 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: %i[update destroy set_best]
 
   after_action :publish_answer, only: %i[create]
+
+  authorize_resource
   
   def create
     @answer = @question.answers.new(answer_params)
