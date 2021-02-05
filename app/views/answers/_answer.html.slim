@@ -1,4 +1,4 @@
-div class="answer-#{answer.id}"
+.answer-#{answer.id}
   hr
   - if answer.best?
     p.text-success The best answer
@@ -15,24 +15,23 @@ div class="answer-#{answer.id}"
   - if current_user && current_user.author_of?(answer.question)
     = link_to (octicon 'check', height: 18), set_best_answer_path(answer), class: 'set-best-answer-#{answer.id}', data: { answer_id: answer.id }, method: :patch, remote: true
 
-  .answer-form
-    - if current_user && current_user.author_of?(answer)
-      = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-        .form-group
-          div class="answer-errors-#{answer.id}"
-        .form-group
-          = f.label :body
-          = f.text_area :body, class: 'form-control'
-        .form-group
-          = f.label :attachments 
-          br/
-          = f.file_field :attachments, multiple: true, direct_upload: true
-        .form-group
-          = f.fields_for :links do |l|
-            = render 'links/link_fields', f: l
-        .form-group
-          = link_to_add_association octicon(:plus), f, :links, partial: 'links/link_fields', title: "Add link"            
-        = f.submit 'Save', class: 'btn btn-sm btn-outline-primary save'
+  - if current_user && current_user.author_of?(answer)
+    = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+      .form-group
+        = render 'shared/errors', resource: answer
+      .form-group
+        = f.label :body
+        = f.text_area :body, class: 'form-control'
+      .form-group
+        = f.label :attachments 
+        br/
+        = f.file_field :attachments, multiple: true, direct_upload: true
+      .form-group
+        = f.fields_for :links do |l|
+          = render 'links/link_fields', f: l
+      .form-group
+        = link_to_add_association octicon(:plus), f, :links, partial: 'links/link_fields', title: "Add link"            
+      = f.submit 'Save', class: 'btn btn-sm btn-outline-primary save'
     
   .comments
     = render "comments/comments", resource: answer

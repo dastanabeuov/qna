@@ -11,8 +11,8 @@ shared_examples "Like or Dislike QnA" do
     login(user2)
 
     it "change like +1" do
-      patch :like, params: { id: question, value: 1, votable_id: question.id, votable_type: question.class.name, user_id: user2 format: :json }
-      patch :like, params: { id: answer, value: 1, votable_id: answer.id, votable_type: answer.class.name, user_id: user2 format: :json }
+      patch :like, params: { id: question, value: 1, votable_id: question.id, votable_type: question.class.name, user_id: user2, format: :json }
+      patch :like, params: { id: answer, value: 1, votable_id: answer.id, votable_type: answer.class.name, user_id: user2, format: :json }
 
       question.reload
       answer.reload
@@ -26,8 +26,8 @@ shared_examples "Like or Dislike QnA" do
     login(user3)
 
     it "change dislike -1" do 
-      patch :dislike, params: { id: question, value: 1, votable_id: question.id, votable_type: question.class.name, user_id: user2 format: :json }
-      patch :dislike, params: { id: answer, value: 1, votable_id: answer.id, votable_type: answer.class.name, user_id: user2 format: :json }
+      patch :dislike, params: { id: question, value: 1, votable_id: question.id, votable_type: question.class.name, user_id: user2, format: :json }
+      patch :dislike, params: { id: answer, value: 1, votable_id: answer.id, votable_type: answer.class.name, user_id: user2, format: :json }
 
       question.reload
       answer.reload
@@ -41,8 +41,8 @@ shared_examples "Like or Dislike QnA" do
     login(user)
 
     it "changes cancel value (like + dislike)" do 
-      patch :dislike, params: { id: question, value: 1, votable_id: question.id, votable_type: question.class.name, user_id: user2 format: :json }
-      patch :dislike, params: { id: answer, value: 1, votable_id: answer.id, votable_type: answer.class.name, user_id: user2 format: :json }
+      patch :dislike, params: { id: question, value: 1, votable_id: question.id, votable_type: question.class.name, user_id: user2, format: :json }
+      patch :dislike, params: { id: answer, value: 1, votable_id: answer.id, votable_type: answer.class.name, user_id: user2, format: :json }
 
       question.reload
       answer.reload

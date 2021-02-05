@@ -7,7 +7,7 @@ feature 'UPDATE ANSWER', %q{
 } do
 
   given(:user) { create(:user) }
-  given(:user2 create(:user) }
+  given(:user2) { create(:user) }
   given(:question) { create(:question, user: user ) }
   given!(:answer) { create(:answer, question: question, user: user) }
 
@@ -37,13 +37,12 @@ feature 'UPDATE ANSWER', %q{
       click_on 'Save'
     end
 
-      expect(current_path).to eq question_path(question)
-      expect(page).to have_content "Body can't be blank"
-    end
+    expect(current_path).to eq question_path(question)
+    expect(page).to have_content "Body can't be blank"
   end
 
   scenario 'Other authenticated user update' do
-    sign_in(non_author) }
+    sign_in(non_author)
 
     visit question_path(question)
 

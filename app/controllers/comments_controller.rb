@@ -4,13 +4,30 @@ class CommentsController < ApplicationController
   def create
     @comment = @commentable.comments.new(comment_params)
     @comment.user = current_user
-    @comment.save
+    if @comment.save
+      set_redirect_success
+    else
+      set_redirect_danger
+    end
+  end
+
+  def set_redirect_success
     if @commentable.is_a?(Answer)
       redirect_to @commentable.question
-      flash[:notice] = "Your Answer comment posted!"
+      flash[:success] = "Your Answer comment posted!"
     else
       redirect_to @commentable
-      flash[:notice] = 'Your Question comment posted!'
+      flash[:success] = 'Your Question comment posted!'
+    end
+  end
+
+  def set_redirect_danger
+    if @commentable.is_a?(Answer)
+      redirect_to @commentable.question
+      flash[:danger] = "Your Answer comment has not created!"
+    else
+      redirect_to @commentable
+      flash[:danger] = "Your Question comment has not created!"
     end
   end
 
