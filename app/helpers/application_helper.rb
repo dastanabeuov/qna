@@ -6,7 +6,7 @@ module ApplicationHelper
   	elsif key == 'alert'
   		'warning'
   	else
-  		kay
+  		key
   	end	
   end
 

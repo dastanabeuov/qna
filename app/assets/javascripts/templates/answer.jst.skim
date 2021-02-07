@@ -32,11 +32,11 @@ div class="comments"
 
 div class="answer-comment-form"
   div class="answer-#{@answer.id}-comment-errors"
-  form [data-type="json" action="/answers/#{@answer.id}/create_comment" accept-charset="UTF-8" data-remote="true" method="post"]
+  form [data-type="json" action="/answers/#{@answer.id}/create" accept-charset="UTF-8" data-remote="true" method="post"]
     input [name="utf8" type="hidden" value="✓"]
     / input [type="hidden" name="authenticity_token" value="FVIXUMpPmmPHDTvA1mI7JrAL3WhT5BQJP/H5p0UPo23Y9TaIUXOKWM9Y5UJb8Vs0ElJiF7mEzbtoB8QFbSDpdg=="]
-    label [for="answer_text"] Text
+    label [for="answer_body"] Comment
     br
-    textarea [name="answer[text]" id="answer_text"]
+    textarea [name="answer[body]"]
     br
     input [type="submit" name="commit" value="Save comment" data-disable-with="Save comment"]

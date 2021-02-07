@@ -1,0 +1,13 @@
+ul class="#{resource.class.name}-#{resource.id}-comments-list"
+  - resource.comments.each do |comment|
+    = render 'comments/comment', comment: comment
+
+= form_for [resource, resource.comments.build], remote: true do |f|
+  .form-group
+    = render 'shared/errors', resource: resource.comments.build  
+  .form-group
+    = f.label :body , 'Comment'
+    br
+    = f.text_area :body
+  
+  = f.submit 'Post comment'

@@ -10,15 +10,13 @@ Rails.application.routes.draw do
   concern :voteable do
     post :like, :dislike, on: :member
   end
+
+  concern :commentable do
+    resources :comments
+  end  
   
-  resources :questions do
-    concerns :attachable
-    concerns :voteable
-    resources :comments, module: :questions
-    resources :answers, shallow: true do 
-      concerns :attachable
-      concerns :voteable
-      resources :comments, module: :answers
+  resources :questions, concerns: %i[voteable attachable commentable], shallow: true do
+    resources :answers, concerns: %i[voteable attachable commentable] do
       patch :set_best, on: :member
     end
   end

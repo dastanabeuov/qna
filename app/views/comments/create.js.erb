@@ -1,5 +1,2 @@
-$('.comment-errors').html('<%= render 'shared/errors', resource: @comment %>');
-
-<% if !@comment.errors.present? %>
-  $('.comment-<%= @comment.id %>').append('<%= j render @comment %>');
-<% end %>
+var parentSelector = '<%= @parent.is_a?(Question) ? ".question" : "#answer-#{@parent.id}" %>';
+$(parentSelector + ' .comments').html('<%= j render "list", resource: @parent %>');

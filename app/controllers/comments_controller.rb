@@ -1,34 +1,11 @@
 class CommentsController < ApplicationController
-  after_action :publish_comment, only: [:create]
+  before_action :authenticate_user!
+  before_action :set_parent
+
+  authorize_resource
 
   def create
-    @comment = @commentable.comments.new(comment_params)
-    @comment.user = current_user
-    if @comment.save
-      set_redirect_success
-    else
-      set_redirect_danger
-    end
-  end
-
-  def set_redirect_success
-    if @commentable.is_a?(Answer)
-      redirect_to @commentable.question
-      flash[:success] = "Your Answer comment posted!"
-    else
-      redirect_to @commentable
-      flash[:success] = 'Your Question comment posted!'
-    end
-  end
-
-  def set_redirect_danger
-    if @commentable.is_a?(Answer)
-      redirect_to @commentable.question
-      flash[:danger] = "Your Answer comment has not created!"
-    else
-      redirect_to @commentable
-      flash[:danger] = "Your Question comment has not created!"
-    end
+    @comment = @parent.comments.create(comment_params)
   end
 
   private
@@ -39,7 +16,12 @@ class CommentsController < ApplicationController
         ApplicationController.render(json: {comment: @comment, id: @comment.commentable_id })
   end
 
+  def set_parent
+    @parent = Question.find(params[:question_id]) if params[:question_id]
+    @parent ||= Answer.find(params[:answer_id])
+  end
+
   def comment_params
-    params.require(:comment).permit(:text)
+    params.require(:comment).permit(:body)
   end
 end
