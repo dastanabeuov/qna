@@ -2,7 +2,7 @@ class QuestionsController < ApplicationController
   include Votes
 
   before_action :authenticate_user!, only: %i[new create show]
-  before_action :load_question, only: %i[show edit update destroy]
+  before_action :set_question, only: %i[show edit update destroy]
   after_action :publish_question, only: [:create]
 
   authorize_resource
@@ -17,46 +17,23 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
-  end  
-
-  def edit
   end
 
+  def edit; end
+
   def update
-    if current_user.author_of?(@question)
-      @question.update(question_params)
-      flash[:success] = 'Your question has been update!'
-      redirect_to @question
-    else
-      redirect_to @question
-      flash[:danger] = 'Your question has not been update!'
-    end
+    @question.update(question_params) if current_user.author_of?(@question)
   end
 
   def destroy
-    if current_user.author_of?(@question)
-      @question.destroy
-      flash[:success] = "Your question has been deleted."
-      redirect_to questions_path
-    end   
+    @question.destroy if current_user.author_of?(@question)
   end
 
   def create
-    @question = current_user.questions.new(question_params)
-    if @question.save
-      redirect_to @question
-      flash[:success] = 'Your question successfully created.'
-    else
-      render :new
-      flash[:danger] = 'Your question is not created.'
-    end
+    @question = current_user.questions.create(question_params)
   end
 
   private
-
-  def load_question
-    @question ||= Question.find(params[:id])
-  end
 
   def publish_question
     return if @question.errors.any?
@@ -67,6 +44,10 @@ class QuestionsController < ApplicationController
         locals: { question: @question }, layout: false
       )
     )
+  end
+
+  def set_question
+    @question = Question.find(params[:id])
   end
 
   def question_params

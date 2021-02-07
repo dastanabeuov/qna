@@ -8,37 +8,20 @@ class AnswersController < ApplicationController
   after_action :publish_answer, only: %i[create]
 
   authorize_resource
-  
+
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = @question.answers.build(answer_params)
     @answer.user = current_user
-    if @answer.save
-      redirect_to @question
-      flash[:success] = "Your answer has been created!"
-    else
-      redirect_to @question
-      flash[:danger] = "Your answer has not created!"
-    end
+    @answer.save
   end
 
   def update
-    if current_user.author_of?(@answer)
-      @answer.update(answer_params)
-      flash[:success] = 'Your answer has been update!'
-      redirect_to @answer.question
-    else
-      redirect_to @answer.question
-      flash[:danger] = 'Your answer has not been update!'
-    end
+    @answer.update(answer_params) if current_user.author_of?(@answer)
   end
 
   def destroy
-    if current_user.author_of?(@answer)
-      @answer.destroy
-      redirect_to @answer.question
-      flash[:info] = 'Your answer has been deleted.'
-    end    
-  end 
+    @answer.destroy if current_user.author_of?(@answer) 
+  end
 
   def set_best
     @question = @answer.question
@@ -67,7 +50,8 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, attachments: [], 
+    params.require(:answer).permit(:body, 
+      attachments: [], 
       links_attributes: [:id, :name, :url, :_destroy])
   end
 end

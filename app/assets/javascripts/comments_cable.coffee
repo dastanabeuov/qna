@@ -9,7 +9,7 @@ $ ->
 
     received: (data) ->
       object = JSON.parse(data)
-      $('.question-' + object.id + '-comments-list').append('<li class="comment-'+object.comment.id+'">'+object.comment.text+'</li>')
+      $('.question-' + object.id + '-comments-list').append('<li class="comment-'+object.comment.id+'">'+object.comment.body+'</li>')
   })
 
   App.cable.subscriptions.create('CommentsChannel', {
@@ -19,5 +19,5 @@ $ ->
 
     received: (data) ->
       object = JSON.parse(data)
-      $('.answer-' + object.id + '-comments-list').append('<li class="comment-'+object.comment.id+'">'+object.comment.text+'</li>')
+      $('.answer-' + object.id + '-comments-list').append('<li class="comment-'+object.comment.id+'">'+object.comment.body+'</li>')
   })

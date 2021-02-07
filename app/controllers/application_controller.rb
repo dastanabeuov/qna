@@ -7,8 +7,12 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-  	redirect_to root_url, alert: exception.message
-  end
+    respond_to do |format|
+      format.html { redirect_to root_url, alert: exception.message }
+      format.js { head :forbiddens }
+      format.json { head :forbidden }
+    end
+  end  
 
   check_authorization unless: :devise_controller?
 end

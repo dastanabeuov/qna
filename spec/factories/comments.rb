@@ -3,6 +3,6 @@ FactoryBot.define do
     user { nil }
     commentable_id { 1 }
     commentable_type { "MyString" }
-    text { "MyText" }
+    body { "MyText" }
   end
 end

@@ -1,4 +1,4 @@
-.answer-#{answer.id}
+.answer id="answer-#{answer.id}"
   hr
   - if answer.best?
     p.text-success The best answer
@@ -34,5 +34,4 @@
       = f.submit 'Save', class: 'btn btn-sm btn-outline-primary save'
     
   .comments
-    = render "comments/comments", resource: answer
-    = render "comments/form", resource: answer
+    = render "comments/list", resource: answer
