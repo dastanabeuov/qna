@@ -7,29 +7,26 @@ feature 'User can signin', %q{
   User can register on system
 } do
   given(:user) { create(:user) }
+  given(:invalid_user) { attributes_for(:user, email: 'wrong@test.com', password: '123456' ) }
+  given(:user_registered) { attributes_for(:user, email: 'newuser@test.com', password: '123456', password_confiramtion: '123456' ) }
   
   background { visit new_user_session_path }
 
   scenario 'Registration user tries sign in' do
-    fill_in 'Email', with: user.email
-    fill_in 'Password', with: user.password
-    click_on 'Log in'
+    sign_in(user)
 
     expect(page).to have_content 'Signed in successfully.'
   end
 
   scenario 'Unregistered user tries sign in' do
-    fill_in 'Email', with: 'wrong@test.com'
-    fill_in 'Password', with: '12345678'
-    click_on 'Log in'
+    sign_in(invalid_user)
     
     expect(page).to have_content 'Invalid Email or password.'
   end
 
   scenario 'User can logout system' do
-    fill_in 'Email', with: user.email
-    fill_in 'Password', with: user.password
-    click_on 'Log in'
+    sign_in(user)
+    
     visit questions_path
     click_on 'Logout'
     
@@ -37,11 +34,7 @@ feature 'User can signin', %q{
   end
 
   scenario 'User can register on system' do
-    visit new_user_registration_path
-    fill_in 'Email', with: 'newuser@test.com'
-    fill_in 'Password', with: '12345678'
-    fill_in 'Password confirmation', with: '12345678'
-    click_on 'Sign up'
+    sign_up(user_registered)
     
     expect(page).to have_content 'Welcome! You have signed up successfully.'
   end
