@@ -31,5 +31,5 @@ RSpec.describe Question, type: :model do
     it 'question only correct answer donative author user' do
       expect(question.user_id).to be_donative
     end
-  end  
+  end 
 end

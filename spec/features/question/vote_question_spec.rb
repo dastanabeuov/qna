@@ -18,7 +18,7 @@ feature 'VOTE QUESTION', %q{
   end
 
   scenario 'Authenticate user vote question' do
-    within "#vote_for_Question_#{ question.id }" do
+    within "#voting-#{question.class.name.downcase}-#{question.id}" do
       expect(page).to have_link 'arrow-up'
       expect(page).to have_link 'arrow-down'
       expect(page).to have_text '0'
@@ -26,7 +26,7 @@ feature 'VOTE QUESTION', %q{
   end
 
   scenario 'Authenticate user can vote question only once' do
-    within "#vote_for_Question_#{ question.id }" do
+    within "#voting-#{question.class.name.downcase}-#{question.id}" do
       click_link 'arrow-up'
     
       expect(page).to have_text '1'
@@ -36,7 +36,7 @@ feature 'VOTE QUESTION', %q{
   end
 
   scenario 'Authenticate user can cancel his vote and re-vote' do
-    within "#vote_for_Question_#{ question.id }" do
+    within "#voting-#{question.class.name.downcase}-#{question.id}" do
       click_link 'arrow-up'
       expect(page).to have_text '1'
 

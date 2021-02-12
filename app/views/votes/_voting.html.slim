@@ -1,4 +1,4 @@
-.voting id="voting-#{voteable.class.name}-#{voteable.id}"
+.voting id="voting-#{voteable.class.name.downcase}-#{voteable.id}"
   .btn-group
     p Voting:
     = link_to (octicon "arrow-up", height: 18), polymorphic_path([:like, voteable]), method: :post, remote: true
