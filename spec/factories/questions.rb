@@ -11,8 +11,8 @@ FactoryBot.define do
       files { Rack::Test::UploadedFile.new('spec/support/test.txt', 'text/plain') }
     end
 
-    trait :invalid_title do
+    trait :invalid do
       title { nil }
     end
-  end  
+  end
 end

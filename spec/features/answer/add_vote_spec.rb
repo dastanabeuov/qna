@@ -19,7 +19,7 @@ feature 'ADD VOTE', %q{
   end
 
   scenario 'Authenticated user can vote for answer' do
-    within "#vote_for_Answer_#{ answer.id }" do
+    within "#voting-#{answer.class.name.downcase}-#{answer.id}" do
       expect(page).to have_link 'arrow-up'
       expect(page).to have_link 'arrow-down'
       expect(page).to have_text '0'
@@ -27,7 +27,7 @@ feature 'ADD VOTE', %q{
   end
 
   scenario 'Authenticated user can vote for answer only once' do
-    within "#vote_for_Answer_#{ answer.id }" do
+    within "#voting-#{answer.class.name.downcase}-#{answer.id}" do
       click_link 'arrow-up'
       expect(page).to have_text '1'
       expect(page).to_not have_link 'arrow-up'
@@ -36,7 +36,7 @@ feature 'ADD VOTE', %q{
   end
 
   scenario 'User can cancel his vote and re-vote' do
-    within "#vote_for_Answer_#{ answer.id }" do
+    within "#voting-#{answer.class.name.downcase}-#{answer.id}" do
       click_link 'arrow-up'
       expect(page).to have_text '1'
       click_link 'Cancel my vote'
@@ -47,7 +47,7 @@ feature 'ADD VOTE', %q{
   end
 
   scenario 'User can not vote for his answer' do
-    within "#vote_for_Answer_#{ second_answer.id }" do
+    within "#voting-#{answer.class.name.downcase}-#{answer.id}" do
       expect(page).to_not have_link 'arrow-up'
       expect(page).to_not have_link 'arrow-down'
     end

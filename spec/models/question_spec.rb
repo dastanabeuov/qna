@@ -5,8 +5,8 @@ RSpec.describe Question, type: :model do
 
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_one(:award).dependet(:destroy) }
-  it { should have_many(:links).dependet(:destroy) }
-  it { should have_many(:comments).dependet(:destroy) }
+
+  it_behaves_like 'resourcable'
 
   it { should validate_presence_of :title }
   it { should validate_presence_of :body }
@@ -31,5 +31,5 @@ RSpec.describe Question, type: :model do
     it 'question only correct answer donative author user' do
       expect(question.user_id).to be_donative
     end
-  end  
+  end 
 end

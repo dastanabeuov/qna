@@ -30,6 +30,11 @@ gem "omniauth-rails_csrf_protection"
 gem 'omniauth-github'
 gem 'omniauth-facebook'
 gem 'cancancan'
+gem 'doorkeeper'
+gem 'active_model_serializers', '~> 0.10'
+gem 'oj'
+gem 'oj_mimic_json'
+gem 'responders'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
