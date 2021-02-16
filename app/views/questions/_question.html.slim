@@ -10,6 +10,13 @@
     = link_to (octicon "trash", height: 18), question_path(question), 
       method: :delete, data: { confirm: 'Are your sure delete?' }
 
+  .subscription
+    -if user_signed_in?
+      -if current_user&.subscribe?(@question)
+        p= link_to  "Unsubscribe", current_user_subscription(@question), method: :delete, remote: true
+      -else
+        p= link_to  "Subscribe", question_subscriptions_path(@question), method: :post, remote: true
+
   .question-form
     = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|  
       .form-group

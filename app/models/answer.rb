@@ -14,6 +14,8 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  after_create :send_notify
+
   def best?
     self.best == true
   end
@@ -24,5 +26,11 @@ class Answer < ApplicationRecord
       update!(best: true)
       question.donative(user)
     end
+  end
+
+  private
+
+  def send_notify
+    NewAnswerNotificationJob.perform_later(self)
   end
 end

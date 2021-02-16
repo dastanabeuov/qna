@@ -31,5 +31,14 @@ RSpec.describe Question, type: :model do
     it 'question only correct answer donative author user' do
       expect(question.user_id).to be_donative
     end
-  end 
+  end
+
+  describe 'reputation' do
+    let(:question) { build(:question) }
+
+    it 'calls ReputationJob' do
+      expect(ReputationJob).to receive(:perform_later).with(question)
+      question.save!
+    end
+  end
 end
