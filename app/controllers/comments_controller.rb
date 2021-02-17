@@ -2,10 +2,13 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_parent
 
+  respond_to :js
+  
   authorize_resource
 
   def create
     @comment = @parent.comments.create(comment_params)
+    respond_with @comment
   end
 
   private

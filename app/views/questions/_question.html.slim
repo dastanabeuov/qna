@@ -1,4 +1,4 @@
-.question-#{question.id}
+div class="question-#{question.id}"
   h1 = question.title
   p = question.body
   p = render 'attachments/attachments', resource: question
@@ -12,7 +12,7 @@
 
   .subscription
     -if user_signed_in?
-      -if current_user&.subscribe?(@question)
+      -if current_user&.already_subscribed?(@question)
         p= link_to  "Unsubscribe", current_user_subscription(@question), method: :delete, remote: true
       -else
         p= link_to  "Subscribe", question_subscriptions_path(@question), method: :post, remote: true

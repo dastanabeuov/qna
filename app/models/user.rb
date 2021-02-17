@@ -23,7 +23,7 @@ class User < ApplicationRecord
     resource.user_id == id
   end
 
-  def subscribe?(entity)
+  def already_subscribed?(entity)
     subscriptions.where(question: entity).exists?
   end
 end

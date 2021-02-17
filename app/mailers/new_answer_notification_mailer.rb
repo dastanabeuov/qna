@@ -5,5 +5,5 @@ class NewAnswerNotificationMailer < ApplicationMailer
     @answer = answer
 
     mail to: user.email
-  end 
+  end
 end

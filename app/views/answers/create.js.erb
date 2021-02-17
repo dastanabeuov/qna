@@ -1,5 +1,1 @@
-$('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
-
-<% if !@answer.errors.present? %>
-  $('.answer-<%= @answer.id %>').append('<%= j render @answer %>');
-<% end %>
+$('.answer-<%= @answer.id %>').append('<%= j render @answer %>');
