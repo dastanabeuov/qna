@@ -34,7 +34,10 @@ gem 'doorkeeper'
 gem 'active_model_serializers', '~> 0.10'
 gem 'oj'
 gem 'oj_mimic_json'
-gem 'responders'
+gem 'responders', '~> 2.4'
+gem 'sidekiq', '4.0.0'
+gem 'sinatra', require: false
+gem 'whenever', require: false
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

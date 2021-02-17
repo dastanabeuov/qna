@@ -20,8 +20,8 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <%= link_to 'Обновить профиль', edit_user_registration_path, class: "dropdown-item" %>
-          <div class="dropdown-divider"></div>
-
+          <%= link_to "Награды: #{user_awards}", '/awards', class: "dropdown-item" %>
+          <!--<div class="dropdown-divider"></div> -->
         </div>
       </li>     
       <li class="nav-item">

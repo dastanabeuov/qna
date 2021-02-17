@@ -4,7 +4,9 @@ class User < ApplicationRecord
   has_many :awards, foreign_key: 'recipient_id'
 	has_many :votes
 	has_many :comments
-
+  has_many :subscriptions, dependent: :destroy
+  has_many :subscribed_question, through: :subscriptions, source: :question
+  
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: %i[github facebook]
@@ -19,5 +21,9 @@ class User < ApplicationRecord
 
   def author_of?(resource)
     resource.user_id == id
+  end
+
+  def already_subscribed?(entity)
+    subscriptions.where(question: entity).exists?
   end
 end

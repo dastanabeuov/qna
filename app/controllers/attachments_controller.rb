@@ -1,6 +1,8 @@
 class AttachmentsController < ApplicationController
+	respond_to :js
+  
   def destroy
     @attachment = ActiveStorage::Attachment.find(params[:id])
-    @attachment.destroy if current_user.author_of?(@attachment.record)
+    respond_with(@attachment.destroy) if current_user.author_of?(@attachment.record)
   end
 end

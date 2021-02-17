@@ -5,18 +5,22 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: %i[show edit update destroy]
   after_action :publish_question, only: [:create]
 
+  respond_to :js, only: :update
+
   authorize_resource
 
   def index
-    @questions = Question.all
+    respond_with(@questions = Question.all)
   end
 
   def show
     @answer = Answer.new
+    @subscription = @question.subscriptions.where(user_id: current_user.id).first
+    respond_with @question
   end
 
   def new
-    @question = Question.new
+    respond_with(@question = Question.new)
   end
 
   def edit; end
@@ -26,11 +30,12 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy if current_user.author_of?(@question)
+    respond_with(@question.destroy) if current_user.author_of?(@question)
   end
 
   def create
     @question = current_user.questions.create(question_params)
+    respond_with @question
   end
 
   private
