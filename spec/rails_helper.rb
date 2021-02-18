@@ -36,6 +36,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
+  config.include SphinxHelpers, type: :feature
   config.include ApiHelpers, type: :request
   
   Capybara.javascript_driver = :selenium_chrome_headless
@@ -47,6 +48,25 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  config.before :each do |example|
+    # Configure and start Sphinx for request specs
+    if example.metadata[:type] == :request
+      ThinkingSphinx::Test.init
+      ThinkingSphinx::Test.start index: false
+    end
+
+    # Disable real-time callbacks if Sphinx isn't running
+    ThinkingSphinx::Configuration.instance.settings['real_time_callbacks'] =
+      (example.metadata[:type] == :request)
+  end
+
+  config.after(:each) do |example|
+    # Stop Sphinx and clear out data after request specs
+    if example.metadata[:type] == :request
+      ThinkingSphinx::Test.stop
+      ThinkingSphinx::Test.clear
+    end
+  end
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
