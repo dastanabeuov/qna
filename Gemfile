@@ -35,7 +35,7 @@ gem 'active_model_serializers', '~> 0.10'
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'responders'
-gem 'sidekiq', '2.0.0'
+gem 'sidekiq', '4.0.0'
 gem 'sinatra', require: false
 gem 'whenever', require: false
 gem 'mysql2'
