@@ -41,7 +41,7 @@ gem 'whenever', require: false
 gem 'mysql2'
 gem 'thinking-sphinx'
 gem 'jdbc-mysql'
-gem "therubyracer"
+gem 'therubyracer'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
