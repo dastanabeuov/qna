@@ -1,4 +1,16 @@
 module ApplicationHelper
+  def render_result(object)
+    klass = object.class.to_s
+    case klass
+    when "Question" then render 'search/question', question: object    
+    when "Answer" then render 'search/answer', answer: object    
+    when "User" then render 'search/user', user: object
+    when "Comment"
+      partial = object.commentable_type == 'Question' ? 'search/question_comment' : 'search/answer_comment'
+      render partial, comment: object
+    end
+  end
+
   def flash_key(key)
   	key.to_s
   	if key == 'notice'

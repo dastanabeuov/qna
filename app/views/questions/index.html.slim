@@ -1,4 +1,6 @@
 h3 Questions
+.search
+  = render 'search/form'
 .questions-list
   - if @questions.any?
     - @questions.each do |question|
