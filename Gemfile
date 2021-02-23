@@ -34,7 +34,7 @@ gem 'doorkeeper'
 gem 'active_model_serializers', '~> 0.10'
 gem 'oj'
 gem 'oj_mimic_json'
-gem 'responders', '~> 2.4'
+gem 'responders'
 gem 'sidekiq', '4.0.0'
 gem 'sinatra', require: false
 gem 'whenever', require: false
