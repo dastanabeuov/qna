@@ -12,7 +12,6 @@ gem 'uglifier', '>= 1.3.0'
 gem 'slim-rails'
 gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
-gem 'jbuilder', '~> 2.5'
 gem "cocoon"
 gem 'devise', github: 'heartcombo/devise', branch: 'ca-omniauth-2'
 gem "aws-sdk-s3", require: false
@@ -23,8 +22,6 @@ gem 'octicons_helper'
 gem 'octicons'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'skim'
-gem 'handlebars_assets'
-gem 'gon'
 gem 'omniauth'
 gem "omniauth-rails_csrf_protection"
 gem 'omniauth-github'
@@ -40,7 +37,6 @@ gem 'sinatra', require: false
 gem 'whenever', require: false
 gem 'mysql2'
 gem 'thinking-sphinx'
-gem 'jdbc-mysql'
 gem 'mini_racer'
 
 group :development, :test do
