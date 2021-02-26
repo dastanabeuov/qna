@@ -7,7 +7,9 @@ class CommentsController < ApplicationController
   authorize_resource
 
   def create
-    @comment = @parent.comments.create(comment_params)
+    @comment = @commentable.comments.create(comment_params)
+    @comment.user = current_user
+    @comment.save
     respond_with @comment
   end
 
@@ -20,8 +22,8 @@ class CommentsController < ApplicationController
   end
 
   def set_parent
-    @parent = Question.find(params[:question_id]) if params[:question_id]
-    @parent ||= Answer.find(params[:answer_id])
+    @commentable = Question.find(params[:question_id]) if params[:question_id]
+    @commentable ||= Answer.find(params[:answer_id])
   end
 
   def comment_params

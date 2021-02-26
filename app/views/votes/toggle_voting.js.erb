@@ -1,1 +1,1 @@
-$("#voting-<%= @voteable.class.name.downcase %>-<%= @voteable.id %>").replaceWith("<%= j render 'votes/voting', voteable: @voteable %>");
+$("#voting-<%= resource_name(@voteable) %>-<%= @voteable.id %>").replaceWith("<%= j render 'votes/voting', voteable: @voteable %>");

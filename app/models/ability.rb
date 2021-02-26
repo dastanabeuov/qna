@@ -24,6 +24,8 @@ class Ability
     guest_abilities
     can :create, [Question, Answer, Comment]
     can [:update, :destroy], [Question, Answer], user_id: @user.id
+    can :create, Subscription
+    can :destroy, Subscription, user_id: user.id
     can_manage_votes
     can :set_best, Answer do |answer|
       user.author_of?(answer.question)

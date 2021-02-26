@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def resource_name(resource)
+    resource.class.name.underscore.to_s
+  end
+
   def render_result(object)
     klass = object.class.to_s
     case klass

@@ -12,22 +12,19 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
 
-  concern :attachable do
-    resources :attachments, shallow: true, only: %i[destroy]
-  end
-
   concern :voteable do
     post :like, :dislike, on: :member
   end
-
-  concern :commentable do
-    resources :comments
-  end  
   
-  resources :questions, concerns: %i[voteable attachable commentable], shallow: true do
+  resources :questions, concerns: %i[voteable], shallow: true do
+    resources :attachments, shallow: true, only: %i[destroy]
+    resources :comments, only: %i[create]
     resources :subscriptions, only: %i[create destroy], shallow: true
-    resources :answers, concerns: %i[voteable attachable commentable] do
+    
+    resources :answers, concerns: %i[voteable] do
       patch :set_best, on: :member
+      resources :attachments, shallow: true, only: %i[destroy]
+      resources :comments, only: %i[create]
     end
   end
 
