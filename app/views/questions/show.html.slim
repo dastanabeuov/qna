@@ -1,12 +1,13 @@
-.question data-id="#{@question.id}" data-user="#{current_user.id}"
-  = render 'question', question: @question
+- cache @question do
+	.question data-id="#{@question.id}" data-user="#{current_user.id}"
+	  = render 'question', question: @question
 
-.answers
-  = render @question.answers
+	.answers
+	  = render @question.answers
 
-.new-answer-form
-  h3 Add additional answer
-  = render 'answers/form'
+	.new-answer-form
+	  h3 Add additional answer
+	  = render 'answers/form'
 
-hr
-= link_to 'Back', root_path
+	hr
+	= link_to 'Back', root_path

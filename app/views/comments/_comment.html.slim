@@ -1,2 +1,3 @@
 li class="comment-#{comment.id}"
-	= comment.body
+  - cache comment do
+	  = comment.body

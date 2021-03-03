@@ -3,8 +3,9 @@ h3 Questions
   = render 'search/form'
 .questions-list
   - if @questions.any?
-    - @questions.each do |question|
-      = render 'question_item', question: question
+  	- cache collection_cache_key_for :question do  
+	    - @questions.each do |question|
+	      = render 'question_item', question: question
   - else
     p No questions found(
 

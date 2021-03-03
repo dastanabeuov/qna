@@ -4,7 +4,7 @@ class Answer < ApplicationRecord
   default_scope { order(created_at: :asc) }
 
   belongs_to :user
-  belongs_to :question
+  belongs_to :question, touch: true
 
   has_many_attached :attachments
   has_many :comments, as: :commentable

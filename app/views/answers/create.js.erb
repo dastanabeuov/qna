@@ -1,1 +1,1 @@
-$('.answer-<%= @answer.id %>').append('<%= j render @answer %>');
+$('.answer-<%= @answer.id %>').append('<%= j render 'answers/answer', answer: @answer %>');
